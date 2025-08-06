@@ -12,6 +12,10 @@ jobs:
     publish:
         runs-on: ubuntu-latest
 
+        permissions:
+            contents: write
+            pages: write
+
         env:
             PYTHON_VERSION: "3.13"
 
