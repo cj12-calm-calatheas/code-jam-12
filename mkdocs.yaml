@@ -70,6 +70,8 @@ nav:
     - Contributor Guide:
           - contributor-guide/index.md
           - Development Environment: contributor-guide/development-environment.md
+          - Version Control: contributor-guide/version-control.md
+          - Documentation: contributor-guide/documentation.md
     - Architecture:
           - architecture/index.md
 
