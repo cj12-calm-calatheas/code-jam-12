@@ -12,3 +12,4 @@ This project has been built by the Calm Calatheas team. Please feel free to reac
 a hand with anything!
 
 [<img src="https://github.com/thijsfranck.png" alt="TFBlunt" title="TFBlunt" width="64">](https://github.com/thijsfranck)
+[<img src="https://avatars.githubusercontent.com/u/133528118?s=96&v=4" alt="leoluy" title="leoluy" width="64">](https://github.com/leolhuile)
