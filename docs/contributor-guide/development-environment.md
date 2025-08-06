@@ -14,7 +14,7 @@ Follow the steps below to configure your SSH key for accessing the repository:
 To clone the repository, run the following command:
 
 ```bash
-git clone git@github.com:aureliusenterprise/project-template.git
+git clone git@github.com:cj12-calm-calatheas/code-jam-12.git
 ```
 
 This will clone the repository to your local machine using SSH.
