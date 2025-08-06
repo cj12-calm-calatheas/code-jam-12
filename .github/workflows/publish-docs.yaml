@@ -12,6 +12,9 @@ jobs:
     publish:
         runs-on: ubuntu-latest
 
+        env:
+            PYTHON_VERSION: "3.13"
+
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
