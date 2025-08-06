@@ -309,3 +309,10 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# Direnv
+.direnv
