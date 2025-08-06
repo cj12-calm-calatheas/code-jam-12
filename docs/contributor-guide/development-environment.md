@@ -121,8 +121,7 @@ This sets up a virtual environment and installs all required packages.
 
 #### Install Node.js Dependencies
 
-For linting non-Python files, we also require some Node.js dependencies. Make sure you have [Node.js](https://nodejs.org)
-installed, then run:
+For linting non-Python files, we also require some Node.js dependencies. To install them, run:
 
 ```bash
 npm install
