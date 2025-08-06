@@ -1,63 +1,51 @@
 [project]
-# This section contains metadata about your project.
-# Don't forget to change the name, description, and authors to match your project!
-name = "code-jam-template"
-description = "Add your description here"
-authors = [
-    { name = "Your Name" }
-]
-version = "0.1.0"
+authors = [{ name = "esmecat" }, { name = "floncdev" }, { name = "leoluy" }, { name = "tfblunt" }, { name = "zike01" }]
+description = "This is the project of the Calm Calatheas team for the Python Discord Code Jam 2025"
+name = "calm-calatheas"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
+version = "0.0.0"
+
 dependencies = []
 
 [dependency-groups]
-# This `dev` group contains all the development requirements for our linting toolchain.
-# Don't forget to pin your dependencies!
-# This list will have to be migrated if you wish to use another dependency manager.
 dev = [
-    "pre-commit~=4.2.0",
-    "ruff~=0.12.2",
+    "mkdocs~=1.6",
+    "mkdocs-material~=9.6",
+    "mkdocstrings~=0.29",
+    "mkdocstrings-python~=1.16",
+    "pre-commit~=4.2",
+    "pyright==1.1.403",
+    "pytest~=8.4",
+    "pytest-asyncio~=1.0",
+    "pytest-sugar~=1.0",
+    "python-dotenv~=1.1",
+    "ruff~=0.12",
 ]
+
+[tool.pyright]
+exclude = [".venv"]
+pythonVersion = "3.13"
+reportUnnecessaryTypeIgnoreComment = "error"
+typeCheckingMode = "standard"
+venvPath = "."
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "session"
+asyncio_mode = "auto"
+required_plugins = ["pytest-asyncio"]
 
 [tool.ruff]
-# Increase the line length. This breaks PEP8 but it is way easier to work with.
-# The original reason for this limit was a standard vim terminal is only 79 characters,
-# but this doesn't really apply anymore.
 line-length = 119
-# Target Python 3.12. If you decide to use a different version of Python
-# you will need to update this value.
-target-version = "py312"
-# Automatically fix auto-fixable issues.
-fix = true
-# The directory containing the source code. If you choose a different project layout
-# you will need to update this value.
-src = ["src"]
+target-version = "py313"
 
 [tool.ruff.lint]
-# Enable all linting rules.
+ignore = ["D100", "D104", "D105", "D212", "D107", "LOG015", "S311", "FIX002", "PT001"]
 select = ["ALL"]
-# Ignore some of the most obnoxious linting errors.
-ignore = [
-    # Missing docstrings.
-    "D100",
-    "D104",
-    "D105",
-    "D106",
-    "D107",
-    # Docstring whitespace.
-    "D203",
-    "D213",
-    # Docstring punctuation.
-    "D415",
-    # Docstring quotes.
-    "D301",
-    # Builtins.
-    "A",
-    # Print statements.
-    "T20",
-    # TODOs.
-    "TD002",
-    "TD003",
-    "FIX",
-]
+
+[tool.ruff.lint.per-file-ignores]
+"**/conftest.py" = ["INP001"]
+"**/test__*.py" = ["INP001", "S101", "PLR2004"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

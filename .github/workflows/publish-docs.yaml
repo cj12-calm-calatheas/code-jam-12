@@ -1,0 +1,43 @@
+name: Publish Documentation
+
+concurrency:
+    group: "docs"
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - run: git config --global user.email "calm-calatheas@github.com"
+            - run: git config --global user.name "Calm Calatheas"
+
+            - name: Set up Python ${{ env.PYTHON_VERSION }}
+              uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ env.PYTHON_VERSION }}
+
+            - name: Install uv
+              run: python -m pip install uv
+
+            - name: Cache the virtualenv
+              uses: actions/cache@v4
+              with:
+                  path: ./.venv
+                  key: ${{ runner.os }}-venv-${{ hashFiles('**/uv.lock') }}
+
+            - name: Install Python dependencies
+              run: uv venv --allow-existing && uv sync
+
+            - name: Publish documentation
+              run: uv run mkdocs gh-deploy
+              shell: bash
