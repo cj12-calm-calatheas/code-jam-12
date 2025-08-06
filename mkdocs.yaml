@@ -2,6 +2,7 @@ copyright: © 2025 Calm Calatheas 🪴
 repo_name: code-jam-12
 repo_url: https://github.com/cj12-calm-calatheas/code-jam-12
 site_name: Calm Calatheas 🪴
+site_url: https://cj12-calm-calatheas.github.io/code-jam-12/
 
 theme:
     name: material
@@ -68,6 +69,9 @@ nav:
           - user-guide/index.md
     - Contributor Guide:
           - contributor-guide/index.md
+          - Development Environment: contributor-guide/development-environment.md
+          - Version Control: contributor-guide/version-control.md
+          - Documentation: contributor-guide/documentation.md
     - Architecture:
           - architecture/index.md
 
