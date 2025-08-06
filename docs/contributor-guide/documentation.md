@@ -63,5 +63,5 @@ for more information on the available options.
 ## Publishing the Documentation
 
 The documentation is published automatically when changes are merged into the `main` branch. A GitHub Action workflow
-is trigged to build the documentation and push it to the `gh-pages` branch. The published documentation is hosted
+is triggered to build the documentation and push it to the `gh-pages` branch. The published documentation is hosted
 on GitHub Pages.
