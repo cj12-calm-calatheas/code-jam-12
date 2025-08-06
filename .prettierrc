@@ -1,0 +1,11 @@
+{
+    "jsonRecursiveSort": true,
+    "plugins": ["prettier-plugin-sort-json", "prettier-plugin-toml"],
+    "printWidth": 119,
+    "proseWrap": "preserve",
+    "reorderKeys": true,
+    "semi": true,
+    "singleQuote": false,
+    "tabWidth": 4,
+    "useTabs": false
+}

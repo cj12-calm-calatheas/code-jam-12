@@ -1,0 +1,83 @@
+{
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bierner.markdown-mermaid",
+                "charliermarsh.ruff",
+                "DavidAnson.vscode-markdownlint",
+                "esbenp.prettier-vscode",
+                "tamasfe.even-better-toml",
+                "-ms-python.autopep8"
+            ],
+            "settings": {
+                "[json]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[markdown]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff"
+                },
+                "[toml]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "editor.formatOnSave": true,
+                "editor.formatOnSaveMode": "file",
+                "files.exclude": {
+                    "**/.pytest_cache": true,
+                    "**/.ruff_cache": true,
+                    "**/__pycache__": true,
+                    ".venv": true,
+                    "node_modules": true,
+                    "site": true
+                },
+                "files.insertFinalNewline": true,
+                "files.watcherExclude": {
+                    "**/.pytest_cache": true,
+                    "**/.ruff_cache": true,
+                    "**/__pycache__": true,
+                    "**/dist": true,
+                    ".git/objects/**": true,
+                    ".git/subtree-cache/**": true,
+                    ".venv": true,
+                    "node_modules": true,
+                    "site": true
+                },
+                "python.analysis.typeCheckingMode": "standard",
+                "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+                "python.testing.pytestEnabled": true,
+                "python.testing.unittestEnabled": false
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts"
+        },
+        "ghcr.io/devcontainers/features/python:1": {
+            "toolsToInstall": ["uv"],
+            "version": "3.13"
+        }
+    },
+    "forwardPorts": [8000],
+    "image": "mcr.microsoft.com/devcontainers/base:noble",
+    "name": "Calm Calatheas 🪴",
+    "portsAttributes": {
+        "8000": {
+            "label": "Documentation Server",
+            "onAutoForward": "notify"
+        }
+    },
+    "postCreateCommand": {
+        "pre-commit": "bash .devcontainer/pre-commit.sh"
+    },
+    "updateContentCommand": {
+        "npm": "bash .devcontainer/npm.sh",
+        "uv": "bash .devcontainer/uv.sh"
+    }
+}

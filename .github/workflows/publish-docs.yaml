@@ -1,23 +1,28 @@
-name: Lint
+name: Publish Documentation
+
+concurrency:
+    group: "docs"
 
 on:
     push:
         branches:
             - main
-    pull_request:
-
-concurrency: lint-${{ github.sha }}
 
 jobs:
-    lint:
+    publish:
         runs-on: ubuntu-latest
 
         env:
             PYTHON_VERSION: "3.13"
 
         steps:
-            - name: Checkout repository
+            - name: Checkout code
               uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - run: git config --global user.email "calm-calatheas@github.com"
+            - run: git config --global user.name "Calm Calatheas"
 
             - name: Set up Python ${{ env.PYTHON_VERSION }}
               uses: actions/setup-python@v5
@@ -36,25 +41,6 @@ jobs:
             - name: Install Python dependencies
               run: uv venv --allow-existing && uv sync
 
-            - name: Update GITHUB_PATH
-              run: echo "$(uv python find)" >> $GITHUB_PATH
-
-            - name: Setup Node.js and dependencies
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: npm
-                  registry-url: "https://npm.pkg.github.com"
-
-            - name: Install Node.js dependencies
-              run: npm install
+            - name: Publish documentation
+              run: uv run mkdocs gh-deploy
               shell: bash
-
-            - name: Run pre-commit hooks
-              uses: pre-commit/action@v3.0.1
-
-            - name: Run the tests
-              run: uv run pytest tests
-
-            - name: Build the documentation
-              run: uv run mkdocs build --strict

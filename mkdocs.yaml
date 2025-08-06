@@ -1,0 +1,101 @@
+copyright: © 2025 Calm Calatheas 🪴
+repo_name: code-jam-12
+repo_url: https://github.com/cj12-calm-calatheas/code-jam-12
+site_name: Calm Calatheas 🪴
+
+theme:
+    name: material
+    search: true
+
+    features:
+        - content.code.copy
+        - navigation.indexes
+        - navigation.instant
+        - navigation.instant.progress
+        - navigation.path
+        - navigation.sections
+        - navigation.tabs
+        - search.highlight
+
+    icon:
+        repo: fontawesome/brands/github
+
+    palette:
+        - media: "(prefers-color-scheme)"
+          accent: deep purple
+          toggle:
+              icon: material/brightness-auto
+              name: Switch to light mode
+        - media: "(prefers-color-scheme: light)"
+          accent: deep purple
+          scheme: default
+          toggle:
+              icon: material/brightness-7
+              name: Switch to dark mode
+        - media: "(prefers-color-scheme: dark)"
+          accent: deep purple
+          scheme: slate
+          toggle:
+              icon: material/brightness-4
+              name: Switch to system preference
+
+markdown_extensions:
+    - admonition
+    - attr_list
+    - codehilite
+    - md_in_html
+    - pymdownx.details
+    - pymdownx.snippets
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: !!python/name:pymdownx.superfences.fence_code_format
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+    - pymdownx.snippets
+    - pymdownx.tabbed:
+          alternate_style: true
+    - pymdownx.tasklist:
+          clickable_checkbox: true
+          custom_checkbox: true
+    - toc:
+          permalink: true
+
+nav:
+    - User Guide:
+          - user-guide/index.md
+    - Contributor Guide:
+          - contributor-guide/index.md
+    - Architecture:
+          - architecture/index.md
+
+plugins:
+    - autorefs
+    - mkdocstrings:
+          handlers:
+              python:
+                  options:
+                      show_root_heading: true
+                      show_object_full_path: false
+                      show_symbol_type_heading: true
+                      show_symbol_type_toc: true
+                      show_signature: true
+                      separate_signature: true
+                      show_signature_annotations: true
+                      signature_crossrefs: true
+                      show_source: false
+                      show_if_no_docstring: true
+                      show_docstring_examples: true
+    - search
+    - tags
+
+extra:
+    generator: false
+    social:
+        - icon: fontawesome/brands/github
+          link: https://github.com/cj12-calm-calatheas/code-jam-12
+
+extra_css:
+    - stylesheets/table.css
