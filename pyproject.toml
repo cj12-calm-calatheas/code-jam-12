@@ -52,6 +52,7 @@ select = ["ALL"]
 convention = "google"
 
 [tool.taskipy.tasks]
+build-docs = "mkdocs build --strict"
 docs = "mkdocs serve"
 serve = "npx nodemon -x \"python -m http.server -d ./app\" -w \"./app\" -e \"*\""
 test = "pytest tests"
