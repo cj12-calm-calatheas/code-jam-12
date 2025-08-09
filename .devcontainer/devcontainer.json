@@ -6,6 +6,7 @@
                 "charliermarsh.ruff",
                 "DavidAnson.vscode-markdownlint",
                 "esbenp.prettier-vscode",
+                "GitHub.vscode-pull-request-github",
                 "tamasfe.even-better-toml",
                 "-ms-python.autopep8"
             ],
@@ -55,6 +56,9 @@
         }
     },
     "features": {
+        "ghcr.io/devcontainers-extra/features/apt-packages": {
+            "packages": ["gnupg2"]
+        },
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts"
@@ -67,6 +71,10 @@
     "forwardPorts": [8000],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
     "name": "Calm Calatheas 🪴",
+    "onCreateCommand": {
+        "npm": "bash .devcontainer/npm.sh",
+        "uv": "bash .devcontainer/uv.sh"
+    },
     "portsAttributes": {
         "8000": {
             "label": "Documentation Server",
@@ -75,9 +83,5 @@
     },
     "postCreateCommand": {
         "pre-commit": "bash .devcontainer/pre-commit.sh"
-    },
-    "updateContentCommand": {
-        "npm": "bash .devcontainer/npm.sh",
-        "uv": "bash .devcontainer/uv.sh"
     }
 }
