@@ -14,13 +14,18 @@ dev = [
     "mkdocs-material~=9.6",
     "mkdocstrings~=0.29",
     "mkdocstrings-python~=1.16",
+    "playwright~=1.54",
     "pre-commit~=4.2",
+    "pyodide-py~=0.28",
     "pyright==1.1.403",
     "pytest~=8.4",
     "pytest-asyncio~=1.0",
+    "pytest-playwright~=0.7",
     "pytest-sugar~=1.0",
     "python-dotenv~=1.1",
     "ruff~=0.12",
+    "taskipy~=1.14",
+    "testcontainers~=4.12",
 ]
 
 [tool.pyright]
@@ -31,9 +36,11 @@ typeCheckingMode = "standard"
 venvPath = "."
 
 [tool.pytest.ini_options]
+addopts = "--browser chromium --browser firefox --browser webkit --tracing retain-on-failure"
 asyncio_default_fixture_loop_scope = "session"
 asyncio_mode = "auto"
 required_plugins = ["pytest-asyncio"]
+testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 119
@@ -49,3 +56,9 @@ select = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.taskipy.tasks]
+build-docs = "mkdocs build --strict"
+docs = "mkdocs serve"
+serve = "npx nodemon -x \"python -m http.server -d ./app\" -w \"./app\" -e \"*\""
+test = "pytest"

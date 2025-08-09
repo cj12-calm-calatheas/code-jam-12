@@ -1,8 +1,13 @@
-def test__placeholder() -> None:
-    """
-    Placeholder test function.
+import re
 
-    This function is intended to be replaced with actual test cases. For now, it is required to ensure that Pytest
-    doesn't fail in CI due to the absence of tests.
+from playwright.sync_api import Page, expect
+
+
+def test__main_page_has_welcome_message(app: Page) -> None:
     """
-    assert True, "This is a placeholder function. Replace with actual tests."
+    Test that the main page has a welcome message.
+
+    Asserts:
+        - The welcome message is visible on the page.
+    """
+    expect(app.get_by_text(re.compile("Hello from Python!"))).to_be_visible()

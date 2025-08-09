@@ -53,8 +53,11 @@ jobs:
             - name: Run pre-commit hooks
               uses: pre-commit/action@v3.0.1
 
-            - name: Run the tests
-              run: uv run pytest tests
-
             - name: Build the documentation
-              run: uv run mkdocs build --strict
+              run: uv run task build-docs
+
+            - name: Install Playwright
+              run: uv run playwright install --with-deps
+
+            - name: Run the tests
+              run: uv run task test

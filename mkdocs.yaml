@@ -3,6 +3,7 @@ repo_name: code-jam-12
 repo_url: https://github.com/cj12-calm-calatheas/code-jam-12
 site_name: Calm Calatheas 🪴
 site_url: https://cj12-calm-calatheas.github.io/code-jam-12/
+dev_addr: 127.0.0.1:9000
 
 theme:
     name: material
