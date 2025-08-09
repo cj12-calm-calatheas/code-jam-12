@@ -136,3 +136,12 @@ uv run pre-commit install
 ```
 
 This will set up the pre-commit hooks to run automatically on each commit.
+
+#### Install Playwright
+
+This project uses [Playwright](https://playwright.dev/python/) to simulate user interactions for testing. To install the
+required dependencies, run the following command:
+
+```bash
+uv run playwright install --with-deps
+```

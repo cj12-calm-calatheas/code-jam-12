@@ -1,0 +1,9 @@
+name: calm-calatheas-test
+
+services:
+    app:
+        build:
+            context: ..
+            dockerfile: Dockerfile
+        ports:
+            - 80

@@ -86,6 +86,7 @@
         }
     },
     "postCreateCommand": {
+        "playwright": "bash .devcontainer/playwright.sh",
         "pre-commit": "bash .devcontainer/pre-commit.sh"
     }
 }
