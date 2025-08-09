@@ -1,5 +1,5 @@
 requires-python = ">=3.13"
-revision = 3
+revision = 2
 version = 1
 
 [[package]]
@@ -38,6 +38,7 @@ dev = [
     { name = "mkdocstrings-python" },
     { name = "playwright" },
     { name = "pre-commit" },
+    { name = "pyodide-py" },
     { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
@@ -59,6 +60,7 @@ dev = [
     { name = "mkdocstrings-python", specifier = "~=1.16" },
     { name = "playwright", specifier = "~=1.54" },
     { name = "pre-commit", specifier = "~=4.2" },
+    { name = "pyodide-py", specifier = "~=0.28" },
     { name = "pyright", specifier = "==1.1.403" },
     { name = "pytest", specifier = "~=8.4" },
     { name = "pytest-asyncio", specifier = "~=1.0" },
@@ -523,6 +525,15 @@ source = { registry = "https://pypi.org/simple" }
 version = "10.16.1"
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e4/06/43084e6cbd4b3bc0e80f6be743b2e79fbc6eed8de9ad8c629939fa55d972/pymdown_extensions-10.16.1-py3-none-any.whl", hash = "sha256:d6ba157a6c03146a7fb122b2b9a121300056384eafeec9c9f9e584adfdb2a32d", size = 266178, upload-time = "2025-07-28T16:19:31.401Z" },
+]
+
+[[package]]
+name = "pyodide-py"
+sdist = { url = "https://files.pythonhosted.org/packages/85/3d/bdb623dc6b1165c906b958b25f81ea2b0ba2f06ded5e491d272f9a54c35d/pyodide_py-0.28.1.tar.gz", hash = "sha256:11464c6e0e3063e7c0bfc2802f53c74f75fb0834190b86bb78769f84c635a18e", size = 52569, upload-time = "2025-08-04T21:31:55.431Z" }
+source = { registry = "https://pypi.org/simple" }
+version = "0.28.1"
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/13/f9/a2533ac6831763c36dd1f4cb6ba9eebb8f41b1880be9e89e3b5994c6c1f8/pyodide_py-0.28.1-py3-none-any.whl", hash = "sha256:e158e58da4cee77d1dc825bdeddd689335a41b8a79b4fa4483a0f3c50e0454e7", size = 58478, upload-time = "2025-08-04T21:31:54.07Z" },
 ]
 
 [[package]]

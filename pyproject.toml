@@ -16,6 +16,7 @@ dev = [
     "mkdocstrings-python~=1.16",
     "playwright~=1.54",
     "pre-commit~=4.2",
+    "pyodide-py~=0.28",
     "pyright==1.1.403",
     "pytest~=8.4",
     "pytest-asyncio~=1.0",
