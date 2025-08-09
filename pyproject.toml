@@ -53,5 +53,5 @@ convention = "google"
 
 [tool.taskipy.tasks]
 docs = "mkdocs serve"
-serve = "python -m http.server -d app"
+serve = "npx nodemon -x \"python -m http.server -d ./app\" -w \"./app\" -e \"*\""
 test = "pytest tests"
