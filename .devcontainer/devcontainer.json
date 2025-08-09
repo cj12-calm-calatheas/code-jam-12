@@ -68,7 +68,7 @@
             "version": "3.13"
         }
     },
-    "forwardPorts": [8000],
+    "forwardPorts": [8000, 9000],
     "image": "mcr.microsoft.com/devcontainers/base:noble",
     "name": "Calm Calatheas 🪴",
     "onCreateCommand": {
@@ -77,11 +77,16 @@
     },
     "portsAttributes": {
         "8000": {
+            "label": "Development Server",
+            "onAutoForward": "notify"
+        },
+        "9000": {
             "label": "Documentation Server",
             "onAutoForward": "notify"
         }
     },
     "postCreateCommand": {
+        "playwright": "bash .devcontainer/playwright.sh",
         "pre-commit": "bash .devcontainer/pre-commit.sh"
     }
 }
