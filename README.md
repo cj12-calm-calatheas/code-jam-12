@@ -15,6 +15,5 @@ Please follow the instructions in the [Contributor Guide](https://cj12-calm-cala
 Until we have a backend setup, use the following commands to serve the static files:
 
 ```bash
-cd app
-python -m http.server
+uv run task serve
 ```

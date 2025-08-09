@@ -21,6 +21,7 @@ dev = [
     "pytest-sugar~=1.0",
     "python-dotenv~=1.1",
     "ruff~=0.12",
+    "taskipy~=1.14",
 ]
 
 [tool.pyright]
@@ -49,3 +50,8 @@ select = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.taskipy.tasks]
+docs = "mkdocs serve"
+serve = "python -m http.server -d app"
+test = "pytest tests"
