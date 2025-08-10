@@ -1,3 +1,12 @@
+from calm_calatheas import App
 from js import document
 
-document.body.innerHTML = "<h1>Hello from Python!</h1>"
+
+def bootstrap() -> None:
+    """Bootstrap the application to the DOM."""
+    app = App(document.body)
+    app.render()
+
+
+if __name__ == "__main__":
+    bootstrap()
