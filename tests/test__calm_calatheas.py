@@ -1,8 +1,7 @@
 import re
 
+from conftest import PYSCRIPT_READY_TIMEOUT_MS
 from playwright.sync_api import Page, expect
-
-from tests.conftest import PYSCRIPT_READY_TIMEOUT_MS
 
 
 def test__main_page_has_welcome_message(app: Page) -> None:
