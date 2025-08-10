@@ -1,40 +1,34 @@
 from typing import override
 
 from js import document
-from pyodide.ffi import JsDomElement
 
 from calm_calatheas.base import Component
 from calm_calatheas.components import Footer, Header
 
 TEMPLATE = """
-<div id="app-header" class="hero-head"></div>
-<div id="app-body" class="hero-body">
-    <div class="content">
-        <h1 class="title is-1">Hello from Python!</h1>
-        <h2 class="subtitle">This is a simple app using Pyodide.</h2>
-        <section class="section px-0">
-            <div class="content">
-                <p>
-                    A general description of the app goes here.
-                </p>
-            </div>
-            <button class="button is-large is-primary">Get started!</button>
-        </section>
+<section class="hero is-fullheight container">
+    <div id="app-header" class="hero-head"></div>
+    <div id="app-body" class="hero-body">
+        <div class="content">
+            <h1 class="title is-1">Hello from Python!</h1>
+            <h2 class="subtitle">This is a simple app using Pyodide.</h2>
+            <section class="section px-0">
+                <div class="content">
+                    <p>
+                        A general description of the app goes here.
+                    </p>
+                </div>
+                <button class="button is-large is-primary">Get started!</button>
+            </section>
+        </div>
     </div>
-</div>
-<div id="app-footer" class="hero-foot"></div>
+    <div id="app-footer" class="hero-foot"></div>
+</section>
 """
 
 
 class App(Component):
     """The main application class."""
-
-    def __init__(self, root: JsDomElement) -> None:
-        super().__init__(
-            root=root,
-            classes=["hero", "is-fullheight", "container"],
-            element_type="section",
-        )
 
     @override
     def build(self) -> str:

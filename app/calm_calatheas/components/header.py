@@ -9,20 +9,22 @@ from calm_calatheas.base import Component
 from .theme import Theme
 
 TEMPLATE = """
-<div class="navbar-brand">
-    <span class="navbar-item">
-        Calm Calatheas
-    </span>
-    <span id="navbar-burger" class="navbar-burger has-text-primary" data-target="main-navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-    </span>
-</div>
-<div id="main-navigation" class="navbar-menu">
-    <div id="navbar-end" class="navbar-end"></div>
-</div>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <span class="navbar-item">
+            Calm Calatheas
+        </span>
+        <span id="navbar-burger" class="navbar-burger has-text-primary" data-target="main-navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+    </div>
+    <div id="main-navigation" class="navbar-menu">
+        <div id="navbar-end" class="navbar-end"></div>
+    </div>
+</nav>
 """
 
 
@@ -30,12 +32,7 @@ class Header(Component):
     """The main header for the application."""
 
     def __init__(self, root: JsDomElement) -> None:
-        super().__init__(
-            root=root,
-            classes=["navbar"],
-            element_type="nav",
-        )
-
+        super().__init__(root)
         self._expanded = False
 
     @override

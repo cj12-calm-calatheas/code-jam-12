@@ -8,19 +8,21 @@ from calm_calatheas.base import Component
 from calm_calatheas.services import Theme_, theme
 
 TEMPLATE = """
-<span class="navbar-link is-arrowless">
-    Theme
-</span>
-<div class="navbar-dropdown">
-    <a id="select-theme-light" class="navbar-item">
+<div class="navbar-item has-dropdown is-hoverable">
+    <span class="navbar-link is-arrowless">
+        Theme
+    </span>
+    <div class="navbar-dropdown">
+        <a id="select-theme-light" class="navbar-item">
         Light
-    </a>
-    <a id="select-theme-dark" class="navbar-item">
-        Dark
-    </a>
-    <a id="select-theme-auto" class="navbar-item">
-        Auto
-    </a>
+        </a>
+        <a id="select-theme-dark" class="navbar-item">
+            Dark
+        </a>
+        <a id="select-theme-auto" class="navbar-item">
+            Auto
+        </a>
+    </div>
 </div>
 """
 
@@ -29,14 +31,7 @@ class Theme(Component):
     """A component for selecting the theme."""
 
     def __init__(self, root: JsDomElement) -> None:
-        super().__init__(
-            root=root,
-            classes=["navbar-item", "has-dropdown", "is-hoverable"],
-            element_type="div",
-        )
-
-    @override
-    def on_init(self) -> None:
+        super().__init__(root=root)
         self._theme = theme
 
     @override

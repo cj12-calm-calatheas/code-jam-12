@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, cast
 
 from js import document, localStorage
 from reactivex.subject import BehaviorSubject
@@ -31,7 +31,11 @@ class Theme:
     """Service to manage the theme of the application."""
 
     def __init__(self) -> None:
-        self.current = BehaviorSubject[Theme_](localStorage.getItem(LOCAL_STORAGE_KEY))
+        self.current = BehaviorSubject[Theme_](
+            cast("Theme_", theme)
+            if (theme := localStorage.getItem(LOCAL_STORAGE_KEY)) and theme in {"light", "dark"}
+            else None,
+        )
 
         self.current.subscribe(_update_document_theme)
         self.current.subscribe(_update_local_storage)
