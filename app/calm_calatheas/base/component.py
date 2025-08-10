@@ -4,14 +4,6 @@ from js import DOMParser
 from pyodide.ffi import JsDomElement
 
 
-class InvalidTemplateError(Exception):
-    """Custom exception raised when a template is invalid."""
-
-    def __init__(self, template: str) -> None:
-        super().__init__(f"Invalid template: {template}")
-        self.template = template
-
-
 class Component(ABC):
     """A base class for all components."""
 
