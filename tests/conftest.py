@@ -11,7 +11,7 @@ PYSCRIPT_READY_TIMEOUT_MS = 20000
 @pytest.fixture(scope="session")
 def compose() -> Generator[DockerCompose]:
     """Return a Docker Compose instance."""
-    with DockerCompose(context=Path(__file__).parent.absolute()) as compose:
+    with DockerCompose(context=Path(__file__).parent.absolute(), build=True) as compose:
         yield compose
 
 

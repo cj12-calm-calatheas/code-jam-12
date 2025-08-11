@@ -1,0 +1,22 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css";
+
+:root {
+    --bulma-primary-h: 0deg;
+    --bulma-primary-l: 40%;
+    --bulma-success-h: 120deg;
+    --bulma-success-s: 50%;
+    --bulma-success-l: 40%;
+    --bulma-warning-h: 52deg;
+    --bulma-warning-l: 50%;
+    --bulma-danger-h: 0deg;
+    --bulma-danger-l: 50%;
+}
+
+@font-face {
+    font-family: "pokemongb";
+    src: url("/assets/pokemongb.ttf");
+}
+
+body {
+    font-family: "pokemongb";
+}
