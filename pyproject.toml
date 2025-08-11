@@ -35,6 +35,7 @@ pythonVersion = "3.13"
 reportMissingModuleSource = "none"           # Pyodide "js" module is dynamic.
 reportUnnecessaryTypeIgnoreComment = "error"
 typeCheckingMode = "standard"
+venv = ".venv"
 venvPath = "."
 
 [tool.pytest.ini_options]
