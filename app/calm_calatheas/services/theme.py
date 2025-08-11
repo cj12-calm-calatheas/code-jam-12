@@ -40,5 +40,9 @@ class Theme:
         self.current.subscribe(_update_document_theme)
         self.current.subscribe(_update_local_storage)
 
+    def destroy(self) -> None:
+        """Clean up the theme service."""
+        self.current.dispose()
+
 
 theme = Theme()
