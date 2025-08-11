@@ -23,6 +23,7 @@ dev = [
     "pytest-playwright~=0.7",
     "pytest-sugar~=1.0",
     "python-dotenv~=1.1",
+    "reactivex~=4.0",
     "ruff~=0.12",
     "taskipy~=1.14",
     "testcontainers~=4.12",
@@ -31,6 +32,7 @@ dev = [
 [tool.pyright]
 exclude = [".venv"]
 pythonVersion = "3.13"
+reportMissingModuleSource = "none"           # Pyodide "js" module is dynamic.
 reportUnnecessaryTypeIgnoreComment = "error"
 typeCheckingMode = "standard"
 venv = ".venv"
@@ -54,6 +56,8 @@ select = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
 "**/conftest.py" = ["INP001"]
 "**/test__*.py" = ["INP001", "S101", "PLR2004"]
+"app/main.py" = ["INP001"]
+"typings/js.pyi" = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -61,5 +65,5 @@ convention = "google"
 [tool.taskipy.tasks]
 build-docs = "mkdocs build --strict"
 docs = "mkdocs serve"
-serve = "npx nodemon -x \"python -m http.server -d ./app\" -w \"./app\" -e \"*\""
+serve = "python -m http.server -d ./app"
 test = "pytest"
