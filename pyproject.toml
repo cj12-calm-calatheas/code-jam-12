@@ -33,6 +33,7 @@ exclude = [".venv"]
 pythonVersion = "3.13"
 reportUnnecessaryTypeIgnoreComment = "error"
 typeCheckingMode = "standard"
+venv = ".venv"
 venvPath = "."
 
 [tool.pytest.ini_options]
