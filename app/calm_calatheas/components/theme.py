@@ -1,11 +1,14 @@
-from typing import cast, override
+from typing import TYPE_CHECKING, cast, override
 
-from js import Event, JsAnchorElement, document
+from js import Event, document
 from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
 from calm_calatheas.base import Component
 from calm_calatheas.services import Theme_, theme
+
+if TYPE_CHECKING:
+    from js import JsAnchorElement
 
 TEMPLATE = """
 <div class="navbar-item has-dropdown is-hoverable">

@@ -1,12 +1,15 @@
-from typing import cast, override
+from typing import TYPE_CHECKING, cast, override
 
-from js import Event, JsAnchorElement, document
+from js import Event, document
 from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
 from calm_calatheas.base import Component
 
 from .theme import Theme
+
+if TYPE_CHECKING:
+    from js import JsAnchorElement
 
 TEMPLATE = """
 <nav class="navbar" role="navigation" aria-label="main navigation">
