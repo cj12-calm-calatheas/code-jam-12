@@ -1,11 +1,16 @@
 import logging
-from typing import Optional
+from typing import Literal, Optional, cast
 
 from js import MediaStream, localStorage, navigator
 from pyodide.webloop import PyodideFuture
 from reactivex import Observable, Subject, empty
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject
+
+FACING_MODES = {"user", "environment"}
+LOCAL_STORAGE_KEY = "preferred_facing_mode"
+
+type FacingMode = Literal["user", "environment"]
 
 
 class Camera:
@@ -53,10 +58,10 @@ class Camera:
 
     def switch_facing_mode(self) -> None:
         """Switch the preferred facing mode between user and environment."""
-        if self.preferred_facing_mode == "user":
-            self.preferred_facing_mode = "environment"
+        if self._preferred_facing_mode == "user":
+            self._preferred_facing_mode = "environment"
         else:
-            self.preferred_facing_mode = "user"
+            self._preferred_facing_mode = "user"
 
         self.deactivate()
         self.open_camera()
@@ -67,7 +72,7 @@ class Camera:
 
         Requests video access from the user. If access is not granted, a DOMException will be raised.
         """
-        constraints = {"video": {"facingMode": self.preferred_facing_mode}}
+        constraints = {"video": {"facingMode": self._preferred_facing_mode}}
         return navigator.mediaDevices.getUserMedia(constraints)
 
     def _handle_camera_stream_error(self, err: Exception) -> Observable:
@@ -76,13 +81,14 @@ class Camera:
         return empty()
 
     @property
-    def preferred_facing_mode(self) -> str:
+    def _preferred_facing_mode(self) -> FacingMode:
         """Return the preferred facing mode for the camera."""
-        return localStorage.getItem("preferred_facing_mode") or "user"
+        mode = localStorage.getItem(LOCAL_STORAGE_KEY)
+        return cast("FacingMode", mode) if mode in FACING_MODES else "user"
 
-    @preferred_facing_mode.setter
-    def preferred_facing_mode(self, value: str) -> None:
-        localStorage.setItem("preferred_facing_mode", value)
+    @_preferred_facing_mode.setter
+    def _preferred_facing_mode(self, value: FacingMode) -> None:
+        localStorage.setItem(LOCAL_STORAGE_KEY, value)
 
 
 camera = Camera()
