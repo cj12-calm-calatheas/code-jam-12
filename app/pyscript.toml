@@ -10,10 +10,12 @@ files = [
     'base/__init__.py',
     'base/component.py',
     'components/__init__.py',
+    'components/camera.py',
     'components/footer.py',
     'components/header.py',
     'components/theme.py',
     'services/__init__.py',
+    'services/camera.py',
     'services/theme.py',
 ]
 from = 'calm_calatheas'

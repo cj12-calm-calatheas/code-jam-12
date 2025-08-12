@@ -1,0 +1,54 @@
+from typing import Optional, override
+
+from js import MediaStream, document
+from pyodide.ffi import JsDomElement
+from pyodide.ffi.wrappers import add_event_listener
+
+from calm_calatheas.base import Component
+from calm_calatheas.services import camera
+
+TEMPLATE = """
+<div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <video id="camera-stream" width="100%" autoplay playsinline></video>
+        <button id="camera-capture" class="button is-fullwidth is-large is-success mt-5">Capture</button>
+    </div>
+    <button id="camera-close" class="modal-close is-large" aria-label="close"></button>
+</div>
+"""
+
+
+class Camera(Component):
+    """Component for displaying the camera feed."""
+
+    def __init__(self, root: JsDomElement) -> None:
+        super().__init__(root)
+        self._camera = camera
+
+    @override
+    def build(self) -> str:
+        return TEMPLATE
+
+    @override
+    def on_destroy(self) -> None:
+        self._subscription_stream.dispose()
+        self._camera.deactivate()
+
+    @override
+    def on_render(self) -> None:
+        self._camera_capture = document.getElementById("camera-capture")
+        self._camera_close = document.getElementById("camera-close")
+        self._camera_stream = document.getElementById("camera-stream")
+
+        add_event_listener(self._camera_capture, "click", lambda _: self._camera.capture())
+        add_event_listener(self._camera_close, "click", lambda _: self.destroy())
+
+        self._subscription_captures = self._camera.captures.subscribe(print)
+        self._subscription_stream = self._camera.camera_stream.subscribe(self._handle_update_stream)
+
+        self._camera.open_camera()
+
+    def _handle_update_stream(self, stream: Optional[MediaStream]) -> None:
+        """Handle updates to the media stream."""
+        self._camera_stream.srcObject = stream  # type: ignore[srcObject attribute is available]
