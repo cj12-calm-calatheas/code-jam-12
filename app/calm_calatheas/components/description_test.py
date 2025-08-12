@@ -1,0 +1,72 @@
+from collections.abc import Callable
+from typing import Any, override
+
+from js import Event, FileReader, document, window  # type: ignore[TOADD]
+from pyodide.ffi.wrappers import add_event_listener
+
+from calm_calatheas.base import Component
+from calm_calatheas.services import description_model
+
+TEMPLATE = """
+<div>
+    <div class="file">
+        <label class="file-label has-name">
+            <input id="file-input" class="file-input" type="file" name="file" />
+            <span class="file-cta">
+                <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label"> Choose a file… </span>
+            </span>
+            <span id="file-name" class="file-name">None selected</span>
+        </label>
+    </div>
+    <button id="submit" class="button is-large is-primary">Generate description!</button>
+    <p id="caption"></p>
+</div>
+"""
+
+
+class DescriptionTest(Component):
+    """Test component to demonstrate the descriptions service."""
+
+    @override
+    def build(self) -> str:
+        return TEMPLATE
+
+    @override
+    def on_render(self) -> None:
+        self._file_input = document.getElementById("file-input")
+        self._file_name = document.getElementById("file-name")
+        self._caption = document.getElementById("caption")
+        self._button = document.getElementById("submit")
+
+        add_event_listener(self._file_input, "change", self._change_file)
+        add_event_listener(self._button, "click", self._generate_description)  # type: ignore[callbacks can be async]
+
+    def _change_file(self, _: Event) -> None:
+        if len(self._file_input.files) == 1:  # type: ignore[TOFIX]
+            self._file_name.innerText = self._file_input.files.item(0).name  # type: ignore[TOFIX]
+        else:
+            self._file_name.innerText = "None selected"
+
+    async def _generate_description(self, _: Event) -> None:
+        if len(self._file_input.files) != 1:  # type: ignore[TOFIX]
+            return
+
+        file = self._file_input.files.item(0)  # type: ignore[TOFIX]
+        reader = FileReader.new()
+
+        def _promise(resolve: Callable[[Any], None], reject: Callable[[Any], None]) -> None:
+            add_event_listener(reader, "load", lambda event: resolve(event.target.result))
+            add_event_listener(reader, "reject", lambda error: reject(error))
+
+            reader.readAsDataURL(file)
+
+        data_url = await window.Promise.new(_promise)
+        generated_caption = await description_model.caption(data_url)
+
+        if generated_caption is None:
+            generated_caption = "Please wait for model to load..."
+
+        self._caption.innerText = generated_caption
