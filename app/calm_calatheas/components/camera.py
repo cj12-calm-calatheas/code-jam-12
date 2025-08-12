@@ -39,6 +39,7 @@ class Camera(Component):
 
     @override
     def on_destroy(self) -> None:
+        self._subscription_acquiring_stream.dispose()
         self._subscription_camera_stream.dispose()
         self._camera.deactivate()
 
@@ -52,6 +53,10 @@ class Camera(Component):
         add_event_listener(self._camera_capture, "click", lambda _: self._handle_capture())
         add_event_listener(self._camera_close, "click", lambda _: self.destroy())
         add_event_listener(self._camera_switch, "click", lambda _: self._camera.switch_facing_mode())
+
+        self._subscription_acquiring_stream = self._camera.is_acquiring_camera.subscribe(
+            lambda status: self._handle_acquiring_stream(status=status),
+        )
 
         self._subscription_camera_stream = self._camera.camera_stream.subscribe(self._handle_update_stream)
 
@@ -75,8 +80,22 @@ class Camera(Component):
 
         canvas.toBlob(create_once_callable(self._handle_post_capture), "image/png")
 
+    def _handle_acquiring_stream(self, *, status: bool) -> None:
+        """Handle the acquiring camera status."""
+        if status:
+            self._camera_capture.classList.add("is-loading")
+        else:
+            self._camera_capture.classList.remove("is-loading")
+
     def _handle_update_stream(self, stream: Optional[MediaStream]) -> None:
         """Handle updates to the media stream."""
+        if not stream:
+            self._camera_capture.setAttribute("disabled", "")
+            self._camera_switch.setAttribute("disabled", "")
+        else:
+            self._camera_capture.removeAttribute("disabled")
+            self._camera_switch.removeAttribute("disabled")
+
         self._camera_stream.srcObject = stream  # type: ignore[srcObject attribute is available]
 
     def _handle_post_capture(self, photo: Blob) -> None:

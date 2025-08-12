@@ -11,7 +11,8 @@ from reactivex.subject import BehaviorSubject
 class Camera:
     """A service for accessing the user's camera."""
 
-    camera_stream = BehaviorSubject[Optional[MediaStream]](None)
+    camera_stream = BehaviorSubject[Optional[MediaStream]](value=None)
+    is_acquiring_camera = BehaviorSubject[bool](value=False)
 
     _logger = logging.getLogger(__name__)
     _open = Subject[None]()
@@ -19,7 +20,8 @@ class Camera:
     def __init__(self) -> None:
         # Acquire the camera stream and notify subscribers when it's available
         self._open.pipe(
-            op.map(lambda _: self._get_user_media()),
+            op.do_action(lambda _: self.is_acquiring_camera.on_next(value=True)),
+            op.map(lambda _: self._get_user_media().finally_(lambda: self.is_acquiring_camera.on_next(value=False))),
             op.switch_latest(),
             op.catch(lambda err, _: self._handle_camera_stream_error(err)),
         ).subscribe(self.camera_stream)
