@@ -1,4 +1,4 @@
-from typing import override
+from typing import TYPE_CHECKING, cast, override
 
 from js import Event, document
 from pyodide.ffi import JsDomElement
@@ -8,6 +8,9 @@ from calm_calatheas.base import Component
 from calm_calatheas.services import camera
 
 from .camera import Camera
+
+if TYPE_CHECKING:
+    from js import JsButtonElement
 
 TEMPLATE = """
 <nav class="tabs is-boxed is-fullwidth">
@@ -42,7 +45,7 @@ class Footer(Component):
 
     @override
     def on_render(self) -> None:
-        self._camera_button = document.getElementById("camera-button")
+        self._camera_button = cast("JsButtonElement", document.getElementById("camera-button"))
         add_event_listener(self._camera_button, "click", self._on_camera_button_click)
 
     def _on_camera_button_click(self, _: Event) -> None:

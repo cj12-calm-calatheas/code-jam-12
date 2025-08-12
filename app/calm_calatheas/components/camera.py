@@ -1,4 +1,4 @@
-from typing import Optional, override
+from typing import TYPE_CHECKING, Optional, cast, override
 
 from js import URL, Blob, MediaStream, document
 from pyodide.ffi import JsDomElement, create_once_callable
@@ -6,6 +6,10 @@ from pyodide.ffi.wrappers import add_event_listener
 
 from calm_calatheas.base import Component
 from calm_calatheas.services import camera
+
+if TYPE_CHECKING:
+    from js import JsVideoElement
+
 
 TEMPLATE = """
 <div class="modal is-active">
@@ -39,55 +43,55 @@ class Camera(Component):
 
     @override
     def on_destroy(self) -> None:
-        self._subscription_acquiring_stream.dispose()
-        self._subscription_camera_stream.dispose()
-        self._camera.deactivate()
+        self._subscription_is_acquiring_media_stream.dispose()
+        self._subscription_media_stream.dispose()
+        self._camera.dispose_media_stream()
 
     @override
     def on_render(self) -> None:
         self._camera_capture = document.getElementById("camera-capture")
         self._camera_close = document.getElementById("camera-close")
-        self._camera_stream = document.getElementById("camera-stream")
+        self._camera_stream = cast("JsVideoElement", document.getElementById("camera-stream"))
         self._camera_switch = document.getElementById("camera-switch")
 
         add_event_listener(self._camera_capture, "click", lambda _: self._handle_capture())
         add_event_listener(self._camera_close, "click", lambda _: self.destroy())
-        add_event_listener(self._camera_switch, "click", lambda _: self._camera.switch_facing_mode())
+        add_event_listener(self._camera_switch, "click", lambda _: self._camera.toggle_facing_mode())
 
-        self._subscription_acquiring_stream = self._camera.is_acquiring_camera.subscribe(
-            lambda status: self._handle_acquiring_stream(status=status),
+        self._subscription_is_acquiring_media_stream = self._camera.is_acquiring_media_stream.subscribe(
+            lambda status: self._handle_is_acquiring_media_stream(status=status),
         )
 
-        self._subscription_camera_stream = self._camera.camera_stream.subscribe(self._handle_update_stream)
+        self._subscription_media_stream = self._camera.media_stream.subscribe(self._handle_media_stream)
 
-        self._camera.open_camera()
+        self._camera.acquire_media_stream()
 
     def _handle_capture(self) -> None:
-        """Handle the capture action."""
+        """Capture a snapshot from the camera stream."""
         canvas = document.createElement("canvas")
-        canvas.width = self._camera_stream.videoWidth  # type: ignore[videoWidth is present]
-        canvas.height = self._camera_stream.videoHeight  # type: ignore[videoHeight is present]
+        canvas.width = self._camera_stream.videoWidth
+        canvas.height = self._camera_stream.videoHeight
 
         context = canvas.getContext("2d")
 
         context.drawImage(
-            self._camera_stream,  # type: ignore[video element is allowed]
+            self._camera_stream,
             0,
             0,
-            self._camera_stream.videoWidth,  # type: ignore[videoWidth is present]
-            self._camera_stream.videoHeight,  # type: ignore[videoHeight is present]
+            self._camera_stream.videoWidth,
+            self._camera_stream.videoHeight,
         )
 
         canvas.toBlob(create_once_callable(self._handle_post_capture), "image/png")
 
-    def _handle_acquiring_stream(self, *, status: bool) -> None:
-        """Handle the acquiring camera status."""
+    def _handle_is_acquiring_media_stream(self, *, status: bool) -> None:
+        """Handle updates to the acquiring media stream status."""
         if status:
             self._camera_capture.classList.add("is-loading")
         else:
             self._camera_capture.classList.remove("is-loading")
 
-    def _handle_update_stream(self, stream: Optional[MediaStream]) -> None:
+    def _handle_media_stream(self, stream: Optional[MediaStream]) -> None:
         """Handle updates to the media stream."""
         if not stream:
             self._camera_capture.setAttribute("disabled", "")
@@ -96,10 +100,10 @@ class Camera(Component):
             self._camera_capture.removeAttribute("disabled")
             self._camera_switch.removeAttribute("disabled")
 
-        self._camera_stream.srcObject = stream  # type: ignore[srcObject attribute is available]
+        self._camera_stream.srcObject = stream
 
     def _handle_post_capture(self, photo: Blob) -> None:
-        """Handle the creation of an object URL for the captured photo."""
+        """Download the captured photo."""
         url = URL.createObjectURL(photo)
 
         link = document.createElement("a")

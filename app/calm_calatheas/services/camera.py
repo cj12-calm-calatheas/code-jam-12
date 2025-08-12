@@ -16,57 +16,61 @@ type FacingMode = Literal["user", "environment"]
 class Camera:
     """A service for accessing the user's camera."""
 
-    camera_stream = BehaviorSubject[Optional[MediaStream]](value=None)
-    is_acquiring_camera = BehaviorSubject[bool](value=False)
+    media_stream = BehaviorSubject[Optional[MediaStream]](value=None)
+    is_acquiring_media_stream = BehaviorSubject[bool](value=False)
 
+    _acquire = Subject[None]()
     _logger = logging.getLogger(__name__)
-    _open = Subject[None]()
 
     def __init__(self) -> None:
-        # Acquire the camera stream and notify subscribers when it's available
-        self._open.pipe(
-            op.do_action(lambda _: self.is_acquiring_camera.on_next(value=True)),
-            op.map(lambda _: self._get_user_media().finally_(lambda: self.is_acquiring_camera.on_next(value=False))),
+        # Acquire the media stream and notify subscribers when it's available
+        self._acquire.pipe(
+            op.do_action(lambda _: self.is_acquiring_media_stream.on_next(value=True)),
+            op.map(
+                lambda _: self._acquire_media_stream().finally_(
+                    lambda: self.is_acquiring_media_stream.on_next(value=False),
+                ),
+            ),
             op.switch_latest(),
-            op.catch(lambda err, _: self._handle_camera_stream_error(err)),
-        ).subscribe(self.camera_stream)
+            op.catch(lambda err, _: self._handle_acquisition_error(err)),
+        ).subscribe(self.media_stream)
 
-    def deactivate(self) -> None:
-        """Deactivate the camera."""
-        if not (camera_stream := self.camera_stream.value):
+    def dispose_media_stream(self) -> None:
+        """Stop all tracks in the media stream and notify subscribers."""
+        if not (camera_stream := self.media_stream.value):
             self._logger.warning("Camera is not active, nothing to deactivate")
             return
 
         for track in camera_stream.getTracks():
             track.stop()
 
-        self.camera_stream.on_next(None)
+        self.media_stream.on_next(None)
 
     def destroy(self) -> None:
         """Clean up the camera resources."""
-        self.deactivate()
-        self._open.dispose()
-        self.camera_stream.dispose()
+        self.dispose_media_stream()
+        self._acquire.dispose()
+        self.media_stream.dispose()
 
-    def open_camera(self) -> None:
-        """Trigger the process of opening the camera."""
-        if self.camera_stream.value:
-            self._logger.warning("Camera is already open")
+    def acquire_media_stream(self) -> None:
+        """Trigger the process of acquiring the media stream."""
+        if self.media_stream.value:
+            self._logger.warning("A media stream is already active")
             return
 
-        self._open.on_next(None)
+        self._acquire.on_next(None)
 
-    def switch_facing_mode(self) -> None:
+    def toggle_facing_mode(self) -> None:
         """Switch the preferred facing mode between user and environment."""
         if self._preferred_facing_mode == "user":
             self._preferred_facing_mode = "environment"
         else:
             self._preferred_facing_mode = "user"
 
-        self.deactivate()
-        self.open_camera()
+        self.dispose_media_stream()
+        self.acquire_media_stream()
 
-    def _get_user_media(self) -> PyodideFuture[MediaStream]:
+    def _acquire_media_stream(self) -> PyodideFuture[MediaStream]:
         """
         Get the user's media stream.
 
@@ -75,14 +79,18 @@ class Camera:
         constraints = {"video": {"facingMode": self._preferred_facing_mode}}
         return navigator.mediaDevices.getUserMedia(constraints)
 
-    def _handle_camera_stream_error(self, err: Exception) -> Observable:
-        """Handle errors that occur while trying to access the camera."""
-        self._logger.error("Error accessing camera", exc_info=err)
+    def _handle_acquisition_error(self, err: Exception) -> Observable:
+        """Handle errors that occur while acquiring the media stream."""
+        self._logger.error("Error acquiring media stream", exc_info=err)
         return empty()
 
     @property
     def _preferred_facing_mode(self) -> FacingMode:
-        """Return the preferred facing mode for the camera."""
+        """
+        Return the preferred facing mode for the camera.
+
+        Save the user preference in local storage to ensure it persists across sessions.
+        """
         mode = localStorage.getItem(LOCAL_STORAGE_KEY)
         return cast("FacingMode", mode) if mode in FACING_MODES else "user"
 

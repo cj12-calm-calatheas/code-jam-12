@@ -1,6 +1,6 @@
-from typing import override
+from typing import cast, override
 
-from js import Event, document
+from js import Event, JsAnchorElement, document
 from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
@@ -14,12 +14,12 @@ TEMPLATE = """
         <span class="navbar-item">
             Calm Calatheas
         </span>
-        <span id="navbar-burger" class="navbar-burger has-text-primary" data-target="main-navigation">
+        <a id="navbar-burger" class="navbar-burger has-text-primary" data-target="main-navigation">
             <span></span>
             <span></span>
             <span></span>
             <span></span>
-        </span>
+        </a>
     </div>
     <div id="main-navigation" class="navbar-menu">
         <div id="navbar-end" class="navbar-end"></div>
@@ -49,7 +49,7 @@ class Header(Component):
         self._theme_selector.render()
 
         self._main_navigation = document.getElementById("main-navigation")
-        self._navbar_burger = document.getElementById("navbar-burger")
+        self._navbar_burger = cast("JsAnchorElement", document.getElementById("navbar-burger"))
 
         add_event_listener(self._navbar_burger, "click", self._toggle_navbar)
 

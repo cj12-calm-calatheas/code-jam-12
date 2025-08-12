@@ -1,6 +1,6 @@
-from typing import override
+from typing import cast, override
 
-from js import Event, document
+from js import Event, JsAnchorElement, document
 from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
@@ -44,9 +44,9 @@ class Theme(Component):
 
     @override
     def on_render(self) -> None:
-        self._select_theme_light = document.getElementById("select-theme-light")
-        self._select_theme_dark = document.getElementById("select-theme-dark")
-        self._select_theme_auto = document.getElementById("select-theme-auto")
+        self._select_theme_light = cast("JsAnchorElement", document.getElementById("select-theme-light"))
+        self._select_theme_dark = cast("JsAnchorElement", document.getElementById("select-theme-dark"))
+        self._select_theme_auto = cast("JsAnchorElement", document.getElementById("select-theme-auto"))
 
         add_event_listener(self._select_theme_light, "click", self._set_theme_light)
         add_event_listener(self._select_theme_dark, "click", self._set_theme_dark)
