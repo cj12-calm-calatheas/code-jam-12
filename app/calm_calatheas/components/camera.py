@@ -93,14 +93,16 @@ class Camera(Component):
 
     def _handle_media_stream(self, stream: Optional[MediaStream]) -> None:
         """Handle updates to the media stream."""
+        self._camera_stream.srcObject = stream
+
         if not stream:
             self._camera_capture.setAttribute("disabled", "")
             self._camera_switch.setAttribute("disabled", "")
+            self._camera_stream.classList.add("is-skeleton")
         else:
             self._camera_capture.removeAttribute("disabled")
             self._camera_switch.removeAttribute("disabled")
-
-        self._camera_stream.srcObject = stream
+            self._camera_stream.classList.remove("is-skeleton")
 
     def _handle_post_capture(self, photo: Blob) -> None:
         """Download the captured photo."""
