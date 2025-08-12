@@ -12,7 +12,14 @@ TEMPLATE = """
     <div class="modal-background"></div>
     <div class="modal-content">
         <video id="camera-stream" width="100%" autoplay playsinline></video>
-        <button id="camera-capture" class="button is-fullwidth is-large is-success mt-5">Capture</button>
+        <div class="buttons has-addons is-centered is-large mt-5">
+            <button id="camera-capture" class="button is-success is-large is-expanded">Capture</button>
+            <button id="camera-switch" class="button is-large">
+                <span class="icon">
+                    <i class="fa-solid fa-repeat"></i>
+                </span>
+            </button>
+        </div>
     </div>
     <button id="camera-close" class="modal-close is-large" aria-label="close"></button>
 </div>
@@ -40,9 +47,11 @@ class Camera(Component):
         self._camera_capture = document.getElementById("camera-capture")
         self._camera_close = document.getElementById("camera-close")
         self._camera_stream = document.getElementById("camera-stream")
+        self._camera_switch = document.getElementById("camera-switch")
 
         add_event_listener(self._camera_capture, "click", lambda _: self._handle_capture())
         add_event_listener(self._camera_close, "click", lambda _: self.destroy())
+        add_event_listener(self._camera_switch, "click", lambda _: self._camera.switch_facing_mode())
 
         self._subscription_camera_stream = self._camera.camera_stream.subscribe(self._handle_update_stream)
 

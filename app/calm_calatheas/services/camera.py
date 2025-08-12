@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from js import MediaStream, navigator
+from js import MediaStream, localStorage, navigator
 from pyodide.webloop import PyodideFuture
 from reactivex import Observable, Subject, empty
 from reactivex import operators as op
@@ -25,7 +25,7 @@ class Camera:
         ).subscribe(self.camera_stream)
 
     def deactivate(self) -> None:
-        """Deactivates the camera."""
+        """Deactivate the camera."""
         if not (camera_stream := self.camera_stream.value):
             self._logger.warning("Camera is not active, nothing to deactivate")
             return
@@ -36,18 +36,28 @@ class Camera:
         self.camera_stream.on_next(None)
 
     def destroy(self) -> None:
-        """Cleans up the camera resources."""
+        """Clean up the camera resources."""
         self.deactivate()
         self._open.dispose()
         self.camera_stream.dispose()
 
     def open_camera(self) -> None:
-        """Triggers the process of opening the camera."""
+        """Trigger the process of opening the camera."""
         if self.camera_stream.value:
             self._logger.warning("Camera is already open")
             return
 
         self._open.on_next(None)
+
+    def switch_facing_mode(self) -> None:
+        """Switch the preferred facing mode between user and environment."""
+        if self.preferred_facing_mode == "user":
+            self.preferred_facing_mode = "environment"
+        else:
+            self.preferred_facing_mode = "user"
+
+        self.deactivate()
+        self.open_camera()
 
     def _get_user_media(self) -> PyodideFuture[MediaStream]:
         """
@@ -55,13 +65,22 @@ class Camera:
 
         Requests video access from the user. If access is not granted, a DOMException will be raised.
         """
-        constraints = {"video": True}
+        constraints = {"video": {"facingMode": self.preferred_facing_mode}}
         return navigator.mediaDevices.getUserMedia(constraints)
 
     def _handle_camera_stream_error(self, err: Exception) -> Observable:
-        """Handles errors that occur while trying to access the camera."""
+        """Handle errors that occur while trying to access the camera."""
         self._logger.error("Error accessing camera", exc_info=err)
         return empty()
+
+    @property
+    def preferred_facing_mode(self) -> str:
+        """Return the preferred facing mode for the camera."""
+        return localStorage.getItem("preferred_facing_mode") or "user"
+
+    @preferred_facing_mode.setter
+    def preferred_facing_mode(self, value: str) -> None:
+        localStorage.setItem("preferred_facing_mode", value)
 
 
 camera = Camera()
