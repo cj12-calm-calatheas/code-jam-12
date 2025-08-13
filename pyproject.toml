@@ -50,7 +50,7 @@ line-length = 119
 target-version = "py313"
 
 [tool.ruff.lint]
-ignore = ["D100", "D104", "D105", "D212", "D107", "LOG015", "S311", "FIX002", "PT001"]
+ignore = ["D100", "D104", "D105", "D212", "D107", "FIX002", "LOG015", "PT001", "UP045", "S311"]
 select = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
