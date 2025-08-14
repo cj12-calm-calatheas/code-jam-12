@@ -1,0 +1,32 @@
+name: Publish Docker
+
+on:
+    push:
+        tags:
+            - "v*.*.*"
+
+jobs:
+    publish-docker:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
+            packages: write
+
+        env:
+            PYTHON_VERSION: "3.13"
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Build and push
+              uses: docker/build-push-action@v6
+              with:
+                  push: true
+                  tags: ghcr.io/cj12-calm-calatheas/code-jam-12:${{ github.ref }}
+                  cache-from: type=registry,ref=ghcr.io/cj12-calm-calatheas/code-jam-12:latest
+                  cache-to: type=inline

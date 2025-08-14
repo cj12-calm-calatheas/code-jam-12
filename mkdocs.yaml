@@ -68,6 +68,7 @@ markdown_extensions:
 nav:
     - User Guide:
           - user-guide/index.md
+          - Deployment: user-guide/deployment.md
     - Contributor Guide:
           - contributor-guide/index.md
           - Development Environment: contributor-guide/development-environment.md
