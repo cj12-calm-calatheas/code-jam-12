@@ -17,6 +17,7 @@ files = [
     'components/description.py',
     'services/__init__.py',
     'services/camera.py',
+    'services/caption.py',
     'services/reader.py',
     'services/theme.py',
     'services/description.py',

@@ -8,29 +8,38 @@ from reactivex import Observable, combine_latest, empty, from_future, of
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject, ReplaySubject
 
-from .reader import reader
+from .caption import caption
 
 if TYPE_CHECKING:
     from transformers_js import ModelOutput
 
 type Model = Callable[[str], Future[ModelOutput]]
 
-MODEL_NAME = "Xenova/vit-gpt2-image-captioning"
+MODEL_NAME = "onnx-community/LFM2-1.2B-ONNX"
+
+CONTEXT = """
+You are a Pokemon professor. You will be given a caption and must generate a corresponding Pokedex entry.
+The generated text should include the Pokemon's name, type, and a flavour text.
+"""
+
+QUESTION_TEMPLATE = """
+{caption}
+"""
 
 
 class Description:
-    """Service to generate descriptions of images."""
+    """Service to generate descriptions from captions."""
 
     descriptions = ReplaySubject[str]()
     model = ReplaySubject[Model]()
 
-    is_generating = BehaviorSubject[bool](value=False)
+    is_generating_description = BehaviorSubject[bool](value=False)
     is_loading_model = BehaviorSubject[bool](value=False)
 
     _logger = logging.getLogger(__name__)
 
     def __init__(self) -> None:
-        self._reader = reader
+        self._caption = caption
 
         # Load the model and notify subscribers when it's ready
         of(MODEL_NAME).pipe(
@@ -44,22 +53,23 @@ class Description:
         ).subscribe(self.model)
 
         # Generate descriptions when an image is available and the model is loaded, and notify subscribers when done
-        combine_latest(self._reader.object_urls, self.model).pipe(
-            op.do_action(lambda _: self.is_generating.on_next(value=True)),
+        combine_latest(self._caption.captions, self.model).pipe(
+            op.do_action(lambda _: self.is_generating_description.on_next(value=True)),
             op.flat_map_latest(
                 lambda params: from_future(create_task(self._describe(*params))).pipe(
-                    op.finally_action(lambda: self.is_generating.on_next(value=False)),
+                    op.finally_action(lambda: self.is_generating_description.on_next(value=False)),
                 ),
             ),
-            op.catch(lambda err, _: self._handle_describe_error(err)),
+            op.catch(lambda err, _: self._handle_description_error(err)),
         ).subscribe(self.descriptions)
 
-    async def _describe(self, url: str, model: Model) -> str:
-        """Generate a description for the image at the given URL."""
-        output = await model(url)
+    async def _describe(self, caption: str, model: Model) -> str:
+        """Generate a description from the given caption."""
+        model_input = "\n".join([CONTEXT, QUESTION_TEMPLATE.format(caption=caption)])
+        output = await model(model_input)
         return output.at(0).generated_text
 
-    def _handle_describe_error(self, err: Exception) -> Observable:
+    def _handle_description_error(self, err: Exception) -> Observable:
         self._logger.error("Failed to generate description", exc_info=err)
         return empty()
 
@@ -69,7 +79,7 @@ class Description:
 
     async def _load_model(self, model_name: str) -> Model:
         """Load the given model."""
-        return await window.pipeline("image-to-text", model_name, {"dtype": "q8", "device": "wasm"})
+        return await window.pipeline("text-generation", model_name, {"dtype": "q4", "device": "wasm"})
 
 
 description = Description()

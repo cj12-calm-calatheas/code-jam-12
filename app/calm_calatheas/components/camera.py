@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Optional, cast, override
 
-from js import MediaStream, document
+from js import Blob, MediaStream, document
 from pyodide.ffi import JsDomElement, create_once_callable
 from pyodide.ffi.wrappers import add_event_listener
 
@@ -86,7 +86,12 @@ class Camera(Component):
             self._camera_stream.videoHeight,
         )
 
-        canvas.toBlob(create_once_callable(self._reader.read), "image/png")
+        canvas.toBlob(create_once_callable(self._handle_capture_success), "image/png")
+
+    def _handle_capture_success(self, blob: Blob) -> None:
+        """Handle successful capture of an image."""
+        self._reader.read(blob)
+        self.destroy()
 
     def _handle_is_acquiring_media_stream(self, *, status: bool) -> None:
         """Handle updates to the acquiring media stream status."""

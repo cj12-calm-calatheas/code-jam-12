@@ -10,7 +10,7 @@ from calm_calatheas.services import reader
 from .camera import Camera
 
 if TYPE_CHECKING:
-    from js import JsButtonElement, JsInputElement
+    from js import JsButtonElement, JsFileInputElement
 
 TEMPLATE = """
 <nav class="tabs is-boxed is-fullwidth">
@@ -60,7 +60,7 @@ class Footer(Component):
     @override
     def on_render(self) -> None:
         self._camera_button = cast("JsButtonElement", document.getElementById("camera-button"))
-        self._file_input = cast("JsInputElement", document.getElementById("file-input"))
+        self._file_input = cast("JsFileInputElement", document.getElementById("file-input"))
         self._upload_button = cast("JsButtonElement", document.getElementById("upload-button"))
 
         add_event_listener(self._camera_button, "click", self._on_camera_button_click)
