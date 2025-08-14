@@ -3,7 +3,7 @@ from typing import override
 from js import document
 
 from calm_calatheas.base import Component
-from calm_calatheas.components import Footer, Header
+from calm_calatheas.components import DescriptionTest, Footer, Header
 
 TEMPLATE = """
 <section class="hero is-fullheight container">
@@ -20,6 +20,7 @@ TEMPLATE = """
                 </div>
                 <button class="button is-large is-primary">Get started!</button>
             </section>
+            <div id="description-test"></div>
         </div>
     </div>
     <div id="app-footer" class="hero-foot"></div>
@@ -38,6 +39,7 @@ class App(Component):
     def pre_destroy(self) -> None:
         self._footer.destroy()
         self._header.destroy()
+        self._description_test.destroy()
 
     @override
     def on_render(self) -> None:
@@ -46,3 +48,6 @@ class App(Component):
 
         self._header = Header(document.getElementById("app-header"))
         self._header.render()
+
+        self._description_test = DescriptionTest(document.getElementById("description-test"))
+        self._description_test.render()

@@ -8,6 +8,21 @@
         <link rel="stylesheet" href="/styles/theme.css" />
         <script type="module" src="https://pyscript.net/releases/2025.8.1/core.js"></script>
         <script src="https://kit.fontawesome.com/0f655184a5.js" crossorigin="anonymous"></script>
+        <script type="module">
+            import {
+                pipeline,
+                AutoModel,
+                AutoProcessor,
+                AutoTokenizer,
+                env,
+            } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.1";
+
+            // Expose the Transformers.js API to the global namespace
+            window.pipeline = pipeline;
+
+            // env.allowLocalModels = false;
+            // env.allowRemoteModels = true;
+        </script>
     </head>
     <body>
         <script type="py" src="./main.py" config="./pyscript.toml"></script>

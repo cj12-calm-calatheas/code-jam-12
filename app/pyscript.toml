@@ -14,9 +14,11 @@ files = [
     'components/footer.py',
     'components/header.py',
     'components/theme.py',
+    'components/description_test.py',
     'services/__init__.py',
     'services/camera.py',
     'services/theme.py',
+    'services/image_captioner.py',
 ]
 from = 'calm_calatheas'
 to_folder = 'calm_calatheas'

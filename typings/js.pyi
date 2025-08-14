@@ -5,17 +5,10 @@
 # Use https://developer.mozilla.org/en-US/docs/Web/API as reference.
 
 from collections.abc import Callable, Iterable
-from typing import Any, Generic, Literal, Sequence, TypeAlias, TypeVar, overload
+from typing import Any, Coroutine, Generic, Literal, Sequence, TypeAlias, TypeVar, overload, Self
 
 from _pyodide._core_docs import _JsProxyMetaClass
-from pyodide.ffi import (
-    JsArray,
-    JsDomElement as OldJSDomElement,
-    JsException,
-    JsFetchResponse,
-    JsProxy,
-    JsTypedArray,
-)
+from pyodide.ffi import JsArray, JsDomElement as OldJSDomElement, JsException, JsFetchResponse, JsProxy, JsTypedArray
 from pyodide.webloop import PyodideFuture
 
 class JsDomElement(OldJSDomElement):
@@ -59,6 +52,9 @@ class JsImgElement(JsDomElement):
 
 class JsInputElement(JsDomElement):
     value: str
+
+class JsFileInputElement(JsInputElement):
+    files: FileList
 
 class JsCanvasElement(JsDomElement):
     width: int
@@ -131,6 +127,21 @@ class DataTransfer(JsProxy):
     def setDragImage(self, image: JsDomElement, x: int, y: int) -> None: ...
     def getData(self, format: str) -> str: ...
 
+class FileList:
+    length: int
+    def item(self, index: int) -> File: ...
+
+class File(Blob):
+    name: str
+
+class FileReader:
+    result: str
+    onload: Callable[[Event], Any]
+    onerror: Callable[[Event], Any]
+    @classmethod
+    def new(cls) -> Self: ...
+    def readAsDataURL(self, file: File) -> None: ...
+
 def eval(code: str) -> Any: ...
 
 # in browser the cancellation token is an int, in node it's a special opaque
@@ -148,6 +159,7 @@ def fetch(
 
 localStorage: LocalStorage = ...
 sessionStorage: SessionStorage = ...
+console: Console = ...
 self: Any = ...
 window: Any = ...
 
@@ -165,6 +177,10 @@ class SessionStorage:
     def setItem(self, key: str, value: str) -> None: ...
     def removeItem(self, key: str) -> None: ...
     def clear(self) -> None: ...
+
+class Console:
+    def log(self, *values: object) -> None: ...
+    def error(self, *values: object) -> None: ...
 
 # Shenanigans to convince skeptical type system to behave correctly:
 #
@@ -293,3 +309,12 @@ class URL(_JsObject):
 class DOMException(JsException): ...
 
 type Blob = Any
+
+# Transformers.js
+
+class _Pipeline(JsProxy):
+    def __call__(
+        self, action: str, model: str, options: dict
+    ) -> Coroutine[None, None, Callable[[Any], Coroutine[None, None, Any]]]: ...
+
+pipeline: _Pipeline = ...
