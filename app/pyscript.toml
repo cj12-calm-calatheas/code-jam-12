@@ -18,7 +18,7 @@ files = [
     'services/__init__.py',
     'services/camera.py',
     'services/theme.py',
-    'services/description_model.py',
+    'services/image_captioner.py',
 ]
 from = 'calm_calatheas'
 to_folder = 'calm_calatheas'

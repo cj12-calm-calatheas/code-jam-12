@@ -56,7 +56,7 @@ select = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
 "**/conftest.py" = ["INP001"]
 "**/test__*.py" = ["INP001", "S101", "PLR2004"]
-"app/calm_calatheas/services/description_model.py" = ["RUF006"]
+"app/calm_calatheas/services/image_captioner.py" = ["RUF006"]
 "app/main.py" = ["INP001"]
 "typings/js.pyi" = ["ALL"]
 

@@ -1,13 +1,18 @@
 import asyncio
+import time
 from typing import ClassVar
 
-from js import console, pipeline  # type: ignore[TOADD]
+from js import console, pipeline
 
 MODEL_NAME = "Xenova/vit-gpt2-image-captioning"
 
 
-class DescriptionModel:
-    """Service to describe images."""
+class ModelNotLoadedError(Exception):
+    """Error to signal that the model has not yet been loaded."""
+
+
+class ImageCaptioner:
+    """Service to caption images."""
 
     _options: ClassVar[dict] = {"dtype": "q8", "device": "wasm"}
 
@@ -19,20 +24,22 @@ class DescriptionModel:
     async def initialize_model(self) -> None:
         """Load the model asynchronously when the app loads."""
         console.log("Loading description model...")
+        t0 = time.time()
         self._model = await pipeline("image-to-text", MODEL_NAME, self._options)
         console.log("Description model loaded!")
+        console.log(time.time() - t0)
 
         self._model_loaded = True
 
-    async def caption(self, url: str) -> str | None:
+    async def caption(self, url: str) -> str:
         """Generate a caption for an image."""
-        if self._model_loaded:
-            console.log("Generating description...")
-            output = await self._model(url)
-            console.log("Description generated!")
-            return output.at(0).generated_text
+        if not self._model_loaded:
+            raise ModelNotLoadedError
 
-        return None  # or raise an exception?
+        console.log("Generating description...")
+        output = await self._model(url)
+        console.log("Description generated!")
+        return output.at(0).generated_text
 
 
-description_model = DescriptionModel()
+image_captioner = ImageCaptioner()

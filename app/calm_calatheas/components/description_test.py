@@ -1,11 +1,12 @@
 from collections.abc import Callable
-from typing import Any, override
+from typing import Any, cast, override
 
-from js import Event, FileReader, document, window  # type: ignore[TOADD]
+import js
+from js import Event, FileReader, console, document, window
 from pyodide.ffi.wrappers import add_event_listener
 
 from calm_calatheas.base import Component
-from calm_calatheas.services import description_model
+from calm_calatheas.services import ModelNotLoadedError, image_captioner
 
 TEMPLATE = """
 <div>
@@ -36,7 +37,7 @@ class DescriptionTest(Component):
 
     @override
     def on_render(self) -> None:
-        self._file_input = document.getElementById("file-input")
+        self._file_input = cast("js.JsFileInputElement", document.getElementById("file-input"))
         self._file_name = document.getElementById("file-name")
         self._caption = document.getElementById("caption")
         self._button = document.getElementById("submit")
@@ -45,28 +46,27 @@ class DescriptionTest(Component):
         add_event_listener(self._button, "click", self._generate_description)  # type: ignore[callbacks can be async]
 
     def _change_file(self, _: Event) -> None:
-        if len(self._file_input.files) == 1:  # type: ignore[TOFIX]
-            self._file_name.innerText = self._file_input.files.item(0).name  # type: ignore[TOFIX]
+        if self._file_input.files.length == 1:
+            self._file_name.innerText = self._file_input.files.item(0).name
         else:
             self._file_name.innerText = "None selected"
 
     async def _generate_description(self, _: Event) -> None:
-        if len(self._file_input.files) != 1:  # type: ignore[TOFIX]
+        if self._file_input.files.length != 1:
             return
 
-        file = self._file_input.files.item(0)  # type: ignore[TOFIX]
+        file = self._file_input.files.item(0)
         reader = FileReader.new()
 
         def _promise(resolve: Callable[[Any], None], reject: Callable[[Any], None]) -> None:
-            add_event_listener(reader, "load", lambda event: resolve(event.target.result))
-            add_event_listener(reader, "reject", lambda error: reject(error))
+            reader.onload = lambda _: resolve(reader.result)
+            reader.onerror = lambda error: reject(error)
 
             reader.readAsDataURL(file)
 
         data_url = await window.Promise.new(_promise)
-        generated_caption = await description_model.caption(data_url)
-
-        if generated_caption is None:
-            generated_caption = "Please wait for model to load..."
-
-        self._caption.innerText = generated_caption
+        try:
+            generated_caption = await image_captioner.caption(data_url)
+            self._caption.innerText = generated_caption
+        except ModelNotLoadedError:
+            console.error("Model not loaded!")
