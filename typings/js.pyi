@@ -58,7 +58,13 @@ class JsImgElement(JsDomElement):
     naturalHeight: int
 
 class JsInputElement(JsDomElement):
+    files: FileList
     value: str
+    def click(self) -> None: ...
+
+class FileList(JsProxy):
+    length: int
+    def item(self, index: int) -> File: ...
 
 class JsCanvasElement(JsDomElement):
     width: int
@@ -190,6 +196,17 @@ class Object(_JsObject):
 class Array(_JsObject):
     @staticmethod
     def new() -> JsArray[Any]: ...
+
+class File(_JsObject):
+    @property
+    def name(self) -> str: ...
+    @property
+    def size(self) -> int: ...
+    @property
+    def type(self) -> str: ...
+
+def FileReader(JsProxy):
+    def readAsDataURL(self, file: Blob | File) -> None: ...
 
 class ImageData(_JsObject):
     @staticmethod
