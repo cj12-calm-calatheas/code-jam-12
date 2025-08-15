@@ -13,6 +13,7 @@ files = [
     'components/camera.py',
     'components/footer.py',
     'components/header.py',
+    'components/loading_caption_model.py',
     'components/theme.py',
     'components/description.py',
     'services/__init__.py',

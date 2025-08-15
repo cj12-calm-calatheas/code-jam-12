@@ -3,11 +3,14 @@ from typing import override
 from js import document
 
 from calm_calatheas.base import Component
-from calm_calatheas.components import Description, Footer, Header
+from calm_calatheas.components import Description, Footer, Header, LoadingCaptionModel
 
 TEMPLATE = """
 <section class="hero is-fullheight container">
-    <div id="app-header" class="hero-head"></div>
+    <div class="hero-head">
+        <div id="app-header" class="mb-2"></div>
+        <div id="notifications"></div>
+    </div>
     <div id="app-body" class="hero-body">
         <div class="content">
             <h1 class="title is-1">Hello from Python!</h1>
@@ -39,6 +42,7 @@ class App(Component):
         self._footer.destroy()
         self._header.destroy()
         self._description.destroy()
+        self._loading_caption_model.destroy()
 
     @override
     def on_render(self) -> None:
@@ -50,3 +54,6 @@ class App(Component):
 
         self._description = Description(document.getElementById("description"))
         self._description.render()
+
+        self._notifications = document.getElementById("notifications")
+        self._loading_caption_model = LoadingCaptionModel(self._notifications)
