@@ -18,9 +18,8 @@ TEMPLATE = """
                         A general description of the app goes here.
                     </p>
                 </div>
-                <button class="button is-large is-primary">Get started!</button>
             </section>
-            <div id="description-test"></div>
+            <div id="description"></div>
         </div>
     </div>
     <div id="app-footer" class="hero-foot"></div>
@@ -49,5 +48,5 @@ class App(Component):
         self._header = Header(document.getElementById("app-header"))
         self._header.render()
 
-        self._description = Description(document.getElementById("description-test"))
+        self._description = Description(document.getElementById("description"))
         self._description.render()
