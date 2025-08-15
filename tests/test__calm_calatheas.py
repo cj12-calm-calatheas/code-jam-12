@@ -1,6 +1,7 @@
 import re
+from pathlib import Path
 
-from conftest import PYSCRIPT_READY_TIMEOUT_MS
+from conftest import CAPTION_GENERATED_TIMEOUT_MS, PYSCRIPT_READY_TIMEOUT_MS
 from playwright.sync_api import Page, expect
 
 
@@ -115,3 +116,19 @@ def test__theme_is_restored_after_refresh(app: Page) -> None:
 
     # Check that the dark theme is still applied
     expect(app.locator("html")).to_have_attribute("data-theme", "dark")
+
+
+def test__caption_is_generated_after_image_upload(model_loaded: Page) -> None:
+    """
+    Test that a caption is generated after an image is uploaded.
+
+    Asserts:
+        - The caption is visible on the page after the image is uploaded.
+    """
+    # Upload an image
+    model_loaded.locator("input[type='file']").set_input_files(Path(__file__).parent / "assets/elephant.jpg")
+
+    # Check that the caption is generated and shown to the user
+    expect(model_loaded.get_by_text(re.compile("A large elephant standing in a field"))).to_be_visible(
+        timeout=CAPTION_GENERATED_TIMEOUT_MS,
+    )

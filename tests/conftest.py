@@ -2,9 +2,11 @@ from collections.abc import Generator
 from pathlib import Path
 
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 from testcontainers.compose import DockerCompose
 
+CAPTION_GENERATED_TIMEOUT_MS = 40000
+CAPTION_MODEL_LOADED_TIMEOUT_MS = 30000
 PYSCRIPT_READY_TIMEOUT_MS = 20000
 
 
@@ -34,3 +36,14 @@ def app(base_url: str, page: Page) -> Page:
     )
 
     return page
+
+
+@pytest.fixture()
+def model_loaded(app: Page) -> Page:
+    """Wait for the caption model to be loaded."""
+    notification = app.get_by_text("Loading the model for generating captions")
+
+    expect(notification).to_be_visible()
+    expect(notification).not_to_be_visible(timeout=CAPTION_MODEL_LOADED_TIMEOUT_MS)
+
+    return app
