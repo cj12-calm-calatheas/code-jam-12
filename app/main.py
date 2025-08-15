@@ -1,4 +1,4 @@
-from calm_calatheas import App
+from .calm_calatheas import App
 from js import document
 
 

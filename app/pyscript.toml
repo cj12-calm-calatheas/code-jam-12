@@ -1,7 +1,7 @@
 docked = false
 terminal = false
 
-packages = ['reactivex']
+packages = ['reactivex','transformers']
 
 [[fetch]]
 files = [
@@ -19,6 +19,8 @@ files = [
     'services/camera.py',
     'services/theme.py',
     'services/image_captioner.py',
+    'services/description_generation.py',
+
 ]
 from = 'calm_calatheas'
 to_folder = 'calm_calatheas'

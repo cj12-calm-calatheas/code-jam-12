@@ -4,9 +4,10 @@ from typing import Any, cast, override
 import js
 from js import Event, FileReader, console, document, window
 from pyodide.ffi.wrappers import add_event_listener
-
+import asyncio
 from calm_calatheas.base import Component
 from calm_calatheas.services import ModelNotLoadedError, image_captioner
+from calm_calatheas.services.description_generation import pokemon_card_generator
 
 TEMPLATE = """
 <div>
@@ -51,6 +52,20 @@ class DescriptionTest(Component):
         else:
             self._file_name.innerText = "None selected"
 
+    async def send_text_to_server(text: str):
+        data = js.JSON.stringify({"text": text})
+        response = await js.fetch(
+            "http://localhost:8000/generate_description/",
+            {
+                "method": "POST",
+                "headers": {"Content-Type": "application/json"},
+                "body": data
+            }
+        )
+        data = await response.json()
+        return data["description"]
+
+
     async def _generate_description(self, _: Event) -> None:
         if self._file_input.files.length != 1:
             return
@@ -66,7 +81,9 @@ class DescriptionTest(Component):
 
         data_url = await window.Promise.new(_promise)
         try:
-            generated_caption = await image_captioner.caption(data_url)
-            self._caption.innerText = generated_caption
+            
+            generated_caption = image_captioner.caption(data_url)
+            description = await send_text_to_server(generated_caption)
+            self._caption.innerText = description
         except ModelNotLoadedError:
             console.error("Model not loaded!")
