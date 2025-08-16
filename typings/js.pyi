@@ -52,6 +52,7 @@ class JsImgElement(JsDomElement):
 
 class JsInputElement(JsDomElement):
     value: str
+    def click(self) -> None: ...
 
 class JsFileInputElement(JsInputElement):
     files: FileList
@@ -134,7 +135,7 @@ class FileList:
 class File(Blob):
     name: str
 
-class FileReader:
+class FileReader(JsProxy):
     result: str
     onload: Callable[[Event], Any]
     onerror: Callable[[Event], Any]

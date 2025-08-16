@@ -1,8 +1,9 @@
 @import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css";
 
 :root {
-    --bulma-primary-h: 0deg;
-    --bulma-primary-l: 40%;
+    --bulma-primary-h: 359deg;
+    --bulma-primary-s: 91%;
+    --bulma-primary-l: 56%;
     --bulma-success-h: 120deg;
     --bulma-success-s: 50%;
     --bulma-success-l: 40%;
@@ -10,6 +11,25 @@
     --bulma-warning-l: 50%;
     --bulma-danger-h: 0deg;
     --bulma-danger-l: 50%;
+
+    --type-bug: #94a034;
+    --type-dark: #4d3f3e;
+    --type-dragon: #4c60a9;
+    --type-electric: #f2c340;
+    --type-fairy: #ba7fb5;
+    --type-fighting: #f08833;
+    --type-fire: #d43a30;
+    --type-flying: #8eb8e3;
+    --type-ghost: #6b426e;
+    --type-grass: #5d9d3c;
+    --type-ground: #895229;
+    --type-ice: #78ccf0;
+    --type-normal: #a2a2a2;
+    --type-poison: #6d4b97;
+    --type-psychic: #dc4d79;
+    --type-rock: #ada984;
+    --type-steel: #74a2b9;
+    --type-water: #4c79bc;
 }
 
 @font-face {
@@ -19,4 +39,105 @@
 
 body {
     font-family: "pokemongb";
+}
+
+#app-container {
+    max-height: 100vh;
+}
+
+#app-body {
+    align-items: unset;
+    display: block;
+    flex-shrink: unset;
+    overflow-y: auto;
+}
+
+.tag.type-bug {
+    background-color: var(--type-bug);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-dark {
+    background-color: var(--type-dark);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-dragon {
+    background-color: var(--type-dragon);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-electric {
+    background-color: var(--type-electric);
+    color: hsl(0, 0%, 4%);
+}
+
+.tag.type-fairy {
+    background-color: var(--type-fairy);
+    color: hsl(0, 0%, 4%);
+}
+
+.tag.type-fighting {
+    background-color: var(--type-fighting);
+    color: hsl(0, 0%, 4%);
+}
+
+.tag.type-fire {
+    background-color: var(--type-fire);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-flying {
+    background-color: var(--type-flying);
+    color: hsl(0, 0%, 4%);
+}
+
+.tag.type-ghost {
+    background-color: var(--type-ghost);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-grass {
+    background-color: var(--type-grass);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-ground {
+    background-color: var(--type-ground);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-ice {
+    background-color: var(--type-ice);
+    color: hsl(0, 0%, 4%);
+}
+
+.tag.type-normal {
+    background-color: var(--type-normal);
+    color: hsl(0, 0%, 4%);
+}
+
+.tag.type-poison {
+    background-color: var(--type-poison);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-psychic {
+    background-color: var(--type-psychic);
+    color: hsl(0, 0%, 100%);
+}
+
+.tag.type-rock {
+    background-color: var(--type-rock);
+    color: hsl(0, 0%, 4%);
+}
+
+.tag.type-steel {
+    background-color: var(--type-steel);
+    color: hsl(0, 0%, 4%);
+}
+
+.tag.type-water {
+    background-color: var(--type-water);
+    color: hsl(0, 0%, 100%);
 }

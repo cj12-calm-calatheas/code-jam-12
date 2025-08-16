@@ -6,7 +6,16 @@ readme = "README.md"
 requires-python = ">=3.13"
 version = "0.0.0"
 
-dependencies = []
+dependencies = [
+    "accelerate~=1.10",
+    "kernels>=0.9.0",
+    "pydantic~=2.11",
+    "pydantic-settings~=2.10",
+    "starlette~=0.47",
+    "transformers~=4.55",
+    "torch~=2.6",
+    "uvicorn~=0.35.0",
+]
 
 [dependency-groups]
 dev = [
@@ -18,6 +27,7 @@ dev = [
     "pre-commit~=4.2",
     "pyodide-py~=0.28",
     "pyright==1.1.403",
+    "pyscript>=0.3.3",
     "pytest~=8.4",
     "pytest-asyncio~=1.0",
     "pytest-playwright~=0.7",
@@ -50,7 +60,7 @@ line-length = 119
 target-version = "py313"
 
 [tool.ruff.lint]
-ignore = ["D100", "D104", "D105", "D212", "D107", "FIX002", "LOG015", "PT001", "UP045", "S311"]
+ignore = ["D100", "D104", "D105", "D212", "D107", "FIX002", "LOG015", "PT001", "UP007", "UP045", "S311"]
 select = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
@@ -63,8 +73,13 @@ select = ["ALL"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.setuptools]
+packages = ["calm_calatheas"]
+
 [tool.taskipy.tasks]
+build = "uv build"
+build-docker = "task build && docker build . -t calm-calatheas:latest"
 build-docs = "mkdocs build --strict"
 docs = "mkdocs serve"
-serve = "python -m http.server -d ./app"
+serve = "python -m calm_calatheas"
 test = "pytest"

@@ -1,7 +1,7 @@
 docked = false
 terminal = false
 
-packages = ['reactivex']
+packages = ['pydantic', 'reactivex']
 
 [[fetch]]
 files = [
@@ -13,12 +13,15 @@ files = [
     'components/camera.py',
     'components/footer.py',
     'components/header.py',
+    'components/loading_caption_model.py',
     'components/theme.py',
-    'components/description_test.py',
+    'components/description.py',
     'services/__init__.py',
     'services/camera.py',
+    'services/caption.py',
+    'services/reader.py',
     'services/theme.py',
-    'services/image_captioner.py',
+    'services/description.py',
 ]
-from = 'calm_calatheas'
-to_folder = 'calm_calatheas'
+from = 'frontend'
+to_folder = 'frontend'

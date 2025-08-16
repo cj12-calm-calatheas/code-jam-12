@@ -4,7 +4,7 @@ from js import Event, document
 from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
-from calm_calatheas.base import Component
+from frontend.base import Component
 
 from .theme import Theme
 
@@ -15,7 +15,8 @@ TEMPLATE = """
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <span class="navbar-item">
-            Calm Calatheas
+            <img src="/assets/logo-128x128.png" alt="Calm Calatheas" />
+            <span>Pokedexter</span>
         </span>
         <a id="navbar-burger" class="navbar-burger has-text-primary" data-target="main-navigation">
             <span></span>
