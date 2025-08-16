@@ -4,8 +4,8 @@ from js import Event, document
 from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
-from calm_calatheas.base import Component
-from calm_calatheas.services import Theme_, theme
+from frontend.base import Component
+from frontend.services import Theme_, theme
 
 if TYPE_CHECKING:
     from js import JsAnchorElement

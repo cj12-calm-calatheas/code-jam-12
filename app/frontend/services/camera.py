@@ -26,12 +26,11 @@ class Camera:
         # Acquire the media stream and notify subscribers when it's available
         self._acquire.pipe(
             op.do_action(lambda _: self.is_acquiring_media_stream.on_next(value=True)),
-            op.map(
+            op.flat_map_latest(
                 lambda _: self._acquire_media_stream().finally_(
                     lambda: self.is_acquiring_media_stream.on_next(value=False),
                 ),
             ),
-            op.switch_latest(),
             op.catch(lambda err, _: self._handle_acquisition_error(err)),
         ).subscribe(self.media_stream)
 

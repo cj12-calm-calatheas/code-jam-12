@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import cast
 
 from js import DOMParser
 from pyodide.ffi import JsDomElement
@@ -10,7 +11,8 @@ class Component(ABC):
     parser = DOMParser.new()  # type: ignore[]
 
     def __init__(self, root: JsDomElement) -> None:
-        self.root = root
+        self.element: JsDomElement | None = None
+        self.root: JsDomElement = root
 
     @abstractmethod
     def build(self) -> str:
@@ -18,7 +20,7 @@ class Component(ABC):
 
     def destroy(self) -> None:
         """Destroy the component and clean up resources."""
-        self.element.remove()
+        self.remove()
         self.on_destroy()
 
     def on_destroy(self) -> None:
@@ -37,6 +39,11 @@ class Component(ABC):
         """Hook to perform actions before rendering the component."""
         return
 
+    def remove(self) -> None:
+        """Remove the component's element from the DOM."""
+        if self.element:
+            self.element.remove()  # type: ignore[remove method is available]
+
     def render(self) -> None:
         """Create a new DOM element for the component and append it to the root element."""
         self.pre_render()
@@ -46,7 +53,7 @@ class Component(ABC):
         document = self.parser.parseFromString(template, "text/html")
 
         # Take the first child of the body and append it to the root element
-        self.element = document.body.firstChild
+        self.element = cast("JsDomElement", document.body.firstChild)
         self.root.appendChild(self.element)
 
         self.on_render()

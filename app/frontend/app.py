@@ -2,13 +2,16 @@ from typing import override
 
 from js import document
 
-from calm_calatheas.base import Component
-from calm_calatheas.components import DescriptionTest, Footer, Header
+from frontend.base import Component
+from frontend.components import Description, Footer, Header, LoadingCaptionModel
 
 TEMPLATE = """
-<section class="hero is-fullheight container">
-    <div id="app-header" class="hero-head"></div>
-    <div id="app-body" class="hero-body">
+<section id="app-container" class="hero is-fullheight container">
+    <div class="hero-head">
+        <div id="app-header" class="mb-2"></div>
+        <div id="notifications"></div>
+    </div>
+    <div id="app-body" class="hero-body mx-0">
         <div class="content">
             <h1 class="title is-1">Hello from Python!</h1>
             <h2 class="subtitle">This is a simple app using Pyodide.</h2>
@@ -18,9 +21,8 @@ TEMPLATE = """
                         A general description of the app goes here.
                     </p>
                 </div>
-                <button class="button is-large is-primary">Get started!</button>
             </section>
-            <div id="description-test"></div>
+            <div id="description"></div>
         </div>
     </div>
     <div id="app-footer" class="hero-foot"></div>
@@ -39,7 +41,8 @@ class App(Component):
     def pre_destroy(self) -> None:
         self._footer.destroy()
         self._header.destroy()
-        self._description_test.destroy()
+        self._description.destroy()
+        self._loading_caption_model.destroy()
 
     @override
     def on_render(self) -> None:
@@ -49,5 +52,7 @@ class App(Component):
         self._header = Header(document.getElementById("app-header"))
         self._header.render()
 
-        self._description_test = DescriptionTest(document.getElementById("description-test"))
-        self._description_test.render()
+        self._description = Description(document.getElementById("description"))
+
+        self._notifications = document.getElementById("notifications")
+        self._loading_caption_model = LoadingCaptionModel(self._notifications)
