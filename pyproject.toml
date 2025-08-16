@@ -6,7 +6,16 @@ readme = "README.md"
 requires-python = ">=3.13"
 version = "0.0.0"
 
-dependencies = []
+dependencies = [
+    "accelerate~=1.10",
+    "kernels>=0.9.0",
+    "pydantic~=2.11",
+    "pydantic-settings~=2.10",
+    "starlette~=0.47",
+    "transformers~=4.55",
+    "torch~=2.6",
+    "uvicorn~=0.35.0",
+]
 
 [dependency-groups]
 dev = [
@@ -26,10 +35,8 @@ dev = [
     "python-dotenv~=1.1",
     "reactivex~=4.0",
     "ruff~=0.12",
-    "starlette>=0.47.2",
     "taskipy~=1.14",
     "testcontainers~=4.12",
-    "uvicorn>=0.35.0",
 ]
 
 [tool.pyright]
@@ -66,8 +73,13 @@ select = ["ALL"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.setuptools]
+packages = ["calm_calatheas"]
+
 [tool.taskipy.tasks]
+build = "uv build"
+build-docker = "task build && docker build . -t calm-calatheas:latest"
 build-docs = "mkdocs build --strict"
 docs = "mkdocs serve"
-serve = "uvicorn server:app"
+serve = "python -m calm_calatheas"
 test = "pytest"

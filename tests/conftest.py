@@ -20,7 +20,7 @@ def compose() -> Generator[DockerCompose]:
 @pytest.fixture(scope="session")
 def base_url(compose: DockerCompose) -> str:
     """Return the base URL for the application."""
-    port = compose.get_service_port("app", 80)
+    port = compose.get_service_port("app", 8000)
     return f"http://localhost:{port}"
 
 

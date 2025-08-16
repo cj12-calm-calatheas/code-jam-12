@@ -15,7 +15,8 @@ TEMPLATE = """
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <span class="navbar-item">
-            Calm Calatheas
+            <img src="/assets/logo-128x128.png" alt="Calm Calatheas" />
+            <span>Pokedexter</span>
         </span>
         <a id="navbar-burger" class="navbar-burger has-text-primary" data-target="main-navigation">
             <span></span>

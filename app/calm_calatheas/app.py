@@ -6,12 +6,12 @@ from calm_calatheas.base import Component
 from calm_calatheas.components import Description, Footer, Header, LoadingCaptionModel
 
 TEMPLATE = """
-<section class="hero is-fullheight container">
+<section id="app-container" class="hero is-fullheight container">
     <div class="hero-head">
         <div id="app-header" class="mb-2"></div>
         <div id="notifications"></div>
     </div>
-    <div id="app-body" class="hero-body">
+    <div id="app-body" class="hero-body mx-0">
         <div class="content">
             <h1 class="title is-1">Hello from Python!</h1>
             <h2 class="subtitle">This is a simple app using Pyodide.</h2>
@@ -53,7 +53,6 @@ class App(Component):
         self._header.render()
 
         self._description = Description(document.getElementById("description"))
-        self._description.render()
 
         self._notifications = document.getElementById("notifications")
         self._loading_caption_model = LoadingCaptionModel(self._notifications)
