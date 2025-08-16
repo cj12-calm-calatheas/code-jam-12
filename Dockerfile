@@ -49,7 +49,7 @@ ENV HOST=0.0.0.0
 ENV PORT=8000
 
 # Configure a healthcheck to ensure the application is running
-HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=6 \
     CMD ["sh", "-c", "curl --fail \"http://localhost:${PORT}/healthcheck\" || exit 1"]
 
 # Start the application
