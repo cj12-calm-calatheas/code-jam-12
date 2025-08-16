@@ -1,4 +1,4 @@
-from calm_calatheas import App
+from frontend import App
 from js import document
 
 

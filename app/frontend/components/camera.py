@@ -4,8 +4,8 @@ from js import Blob, MediaStream, document
 from pyodide.ffi import JsDomElement, create_once_callable
 from pyodide.ffi.wrappers import add_event_listener
 
-from calm_calatheas.base import Component
-from calm_calatheas.services import camera, reader
+from frontend.base import Component
+from frontend.services import camera, reader
 
 if TYPE_CHECKING:
     from js import JsVideoElement

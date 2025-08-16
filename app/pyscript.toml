@@ -23,5 +23,5 @@ files = [
     'services/theme.py',
     'services/description.py',
 ]
-from = 'calm_calatheas'
-to_folder = 'calm_calatheas'
+from = 'frontend'
+to_folder = 'frontend'

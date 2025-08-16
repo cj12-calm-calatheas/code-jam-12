@@ -2,8 +2,8 @@ from typing import override
 
 from pyodide.ffi import JsDomElement
 
-from calm_calatheas.base import Component
-from calm_calatheas.services import caption
+from frontend.base import Component
+from frontend.services import caption
 
 TEMPLATE = """
 <div class="notification is-info">

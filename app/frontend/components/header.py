@@ -4,7 +4,7 @@ from js import Event, document
 from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
-from calm_calatheas.base import Component
+from frontend.base import Component
 
 from .theme import Theme
 

@@ -2,8 +2,8 @@ from typing import override
 
 from js import document
 
-from calm_calatheas.base import Component
-from calm_calatheas.components import Description, Footer, Header, LoadingCaptionModel
+from frontend.base import Component
+from frontend.components import Description, Footer, Header, LoadingCaptionModel
 
 TEMPLATE = """
 <section id="app-container" class="hero is-fullheight container">

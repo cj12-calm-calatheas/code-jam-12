@@ -5,8 +5,8 @@ from js import document
 from pyodide.ffi import JsDomElement
 from reactivex import combine_latest
 
-from calm_calatheas.base import Component
-from calm_calatheas.services import PokemonDescription, caption, description, reader
+from frontend.base import Component
+from frontend.services import PokemonDescription, caption, description, reader
 
 if TYPE_CHECKING:
     from js import JsImgElement
