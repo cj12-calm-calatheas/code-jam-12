@@ -23,7 +23,7 @@ LOADING_TEMPLATE = """
                 <p class="title is-4 is-skeleton">Name</p>
                 <p class="subtitle is-6 is-skeleton">Category</p>
                 <div class="tags has-addons">
-                    <span class="tag is-skeleton"></span>
+                    <span class="tag is-skeleton">Type</span>
                 </div>
             </div>
         </div>
@@ -39,22 +39,22 @@ LOADING_TEMPLATE = """
     <div class="field is-grouped is-grouped-multiline has-text-7">
         <div class="control">
             <div class="tags has-addons">
-                <span class="tag is-skeleton"></span>
+                <span class="tag is-skeleton">Ability</span>
             </div>
         </div>
         <div class="control">
             <div class="tags has-addons">
-                <span class="tag is-skeleton"></span>
+                <span class="tag is-skeleton">Habitat</span>
             </div>
         </div>
         <div class="control">
             <div class="tags has-addons">
-                <span class="tag is-skeleton"></span>
+                <span class="tag is-skeleton">Height</span>
             </div>
         </div>
         <div class="control">
             <div class="tags has-addons">
-                <span class="tag is-skeleton"></span>
+                <span class="tag is-skeleton">Weight</span>
             </div>
         </div>
     </div>
