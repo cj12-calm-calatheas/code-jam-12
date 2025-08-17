@@ -7,7 +7,7 @@ from pyodide.ffi.wrappers import add_event_listener
 import asyncio
 from calm_calatheas.base import Component
 from calm_calatheas.services import ModelNotLoadedError, image_captioner
-from calm_calatheas.services.description_generation import pokemon_card_generator
+
 
 TEMPLATE = """
 <div>
@@ -52,7 +52,7 @@ class DescriptionTest(Component):
         else:
             self._file_name.innerText = "None selected"
 
-    async def send_text_to_server(text: str):
+    async def send_text_to_server(self,text: str):
         data = js.JSON.stringify({"text": text})
         response = await js.fetch(
             "http://localhost:8000/generate_description/",
@@ -83,7 +83,7 @@ class DescriptionTest(Component):
         try:
             
             generated_caption = image_captioner.caption(data_url)
-            description = await send_text_to_server(generated_caption)
+            description = await self.send_text_to_server(generated_caption)
             self._caption.innerText = description
         except ModelNotLoadedError:
             console.error("Model not loaded!")

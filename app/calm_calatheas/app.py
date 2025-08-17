@@ -1,6 +1,10 @@
 from typing import override
 
-from js import document
+try:
+    from js import document
+except ImportError:
+    document = None  
+
 
 from calm_calatheas.base import Component
 from calm_calatheas.components import DescriptionTest, Footer, Header
