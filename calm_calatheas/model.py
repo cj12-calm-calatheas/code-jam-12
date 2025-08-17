@@ -92,7 +92,11 @@ class PokemonDescription(BaseModel):
 MODEL_NAME = "Qwen/Qwen3-1.7B"
 
 TOKENIZER = AutoTokenizer.from_pretrained(MODEL_NAME)
-MODEL = AutoModelForCausalLM.from_pretrained(MODEL_NAME, torch_dtype="auto", device_map="auto")
+MODEL = AutoModelForCausalLM.from_pretrained(
+    MODEL_NAME,
+    torch_dtype="auto",
+    device_map="auto",
+)
 
 DESCRIPTION_PROMPT = f"""
 You are a helpful Pokemon professor.
@@ -143,7 +147,10 @@ def _repair(content: str, validation_error: ValidationError) -> PokemonDescripti
             "role": "system",
             "content": REPAIR_PROMPT,
         },
-        {"role": "user", "content": f"Description: {content}\n\nError: {validation_error}"},
+        {
+            "role": "user",
+            "content": f"Description: {content}\n\nError: {validation_error}",
+        },
     ]
 
     thinking_content, content = _prompt(messages)
@@ -172,7 +179,10 @@ def _prompt(messages: list[dict[str, str]]) -> tuple[str, str]:
     except ValueError:
         index = 0
 
-    thinking_content = TOKENIZER.decode(output_ids[:index], skip_special_tokens=True).strip("\n")
+    thinking_content = TOKENIZER.decode(
+        output_ids[:index],
+        skip_special_tokens=True,
+    ).strip("\n")
     content = TOKENIZER.decode(output_ids[index:], skip_special_tokens=True).strip("\n")
 
     return thinking_content, content

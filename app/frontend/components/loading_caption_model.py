@@ -19,7 +19,9 @@ class LoadingCaptionModel(Component):
 
     def __init__(self, root: JsDomElement) -> None:
         super().__init__(root)
-        self._subscription_is_loading = caption.is_loading_model.pipe(ops.distinct_until_changed()).subscribe(
+        self._subscription_is_loading = caption.is_loading_model.pipe(
+            ops.distinct_until_changed(),
+        ).subscribe(
             lambda is_loading: self._handle_is_loading_update(is_loading=is_loading),
         )
 

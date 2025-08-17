@@ -27,7 +27,9 @@ class Description:
             op.do_action(lambda _: self.is_generating_description.on_next(value=True)),
             op.flat_map_latest(
                 lambda caption: from_future(create_task(self._describe(caption))).pipe(
-                    op.finally_action(lambda: self.is_generating_description.on_next(value=False)),
+                    op.finally_action(
+                        lambda: self.is_generating_description.on_next(value=False),
+                    ),
                 ),
             ),
             op.catch(lambda err, _: self._handle_description_error(err)),

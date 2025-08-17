@@ -78,7 +78,9 @@ class App(Component):
         add_event_listener(self._pokemon_refresh, "click", self._on_pokemon_refresh)
 
         pokemon.is_refreshing.subscribe(
-            lambda is_refreshing: self._handle_pokemon_is_refreshing(is_refreshing=is_refreshing),
+            lambda is_refreshing: self._handle_pokemon_is_refreshing(
+                is_refreshing=is_refreshing,
+            ),
         )
 
     def _on_pokemon_refresh(self, _: Event) -> None:

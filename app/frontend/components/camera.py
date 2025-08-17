@@ -50,18 +50,31 @@ class Camera(Component):
         self._camera_capture = document.getElementById("camera-capture")
         self._camera_container = document.getElementById("camera-container")
         self._camera_close = document.getElementById("camera-close")
-        self._camera_stream = cast("JsVideoElement", document.getElementById("camera-stream"))
+        self._camera_stream = cast(
+            "JsVideoElement",
+            document.getElementById("camera-stream"),
+        )
         self._camera_switch = document.getElementById("camera-switch")
 
-        add_event_listener(self._camera_capture, "click", lambda _: self._handle_capture())
+        add_event_listener(
+            self._camera_capture,
+            "click",
+            lambda _: self._handle_capture(),
+        )
         add_event_listener(self._camera_close, "click", lambda _: self.destroy())
-        add_event_listener(self._camera_switch, "click", lambda _: camera.toggle_facing_mode())
+        add_event_listener(
+            self._camera_switch,
+            "click",
+            lambda _: camera.toggle_facing_mode(),
+        )
 
         self._subscription_is_acquiring_media_stream = camera.is_acquiring_media_stream.subscribe(
             lambda status: self._handle_is_acquiring_media_stream(status=status),
         )
 
-        self._subscription_media_stream = camera.media_stream.subscribe(self._handle_media_stream)
+        self._subscription_media_stream = camera.media_stream.subscribe(
+            self._handle_media_stream,
+        )
 
         camera.acquire_media_stream()
 
