@@ -43,7 +43,6 @@ class Pokemon:
 
         # Retrieve the current list of Pokemon from the database
         self._refresh.pipe(
-            op.debounce(0.5),  # The user can potentially spam the refresh button
             op.do_action(lambda _: self.is_refreshing.on_next(value=True)),
             op.flat_map_latest(
                 lambda _: from_future(create_task(database.find_all())).pipe(
