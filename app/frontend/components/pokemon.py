@@ -10,8 +10,14 @@ from frontend.components import Description
 from frontend.models import PokemonRecord
 from frontend.services import caption, description, pokemon, reader
 
+EMPTY_PLACEHOLDER_TEMPLATE = """
+<p id="pokemon-empty-placeholder">Nothing to show here yet!</p>
+"""
+
 TEMPLATE = """
-<div id="pokemon-grid" class="grid is-col-min-20"></div>
+<div id="pokemon-grid" class="grid is-col-min-20">
+    <p>Nothing to show here yet!</p>
+</div>
 """
 
 
@@ -62,6 +68,10 @@ class Pokemon(Component):
 
         self._current_pokemon = []
 
+        if not pokemon:
+            self._pokemon_grid.innerHTML = EMPTY_PLACEHOLDER_TEMPLATE  # type: ignore[innerHTML is available]
+            return
+
         for item in pokemon:
             cell = document.createElement("div")
             cell.classList.add("cell")
@@ -75,6 +85,9 @@ class Pokemon(Component):
 
     def _render_loading_placeholder(self) -> None:
         """Render a loading placeholder in the Pokemon grid."""
+        if placeholder := document.getElementById("pokemon-empty-placeholder"):
+            placeholder.remove()  # type: ignore[remove is available]
+
         cell = document.createElement("div")
         cell.classList.add("cell")
 
