@@ -30,11 +30,11 @@ TEMPLATE = """
                 </div>
                 <div class="level-right">
                     <div class="level-item">
-                        <button id="pokemon-refresh" class="is-size-4">
+                        <a id="pokemon-refresh" class="is-size-4">
                             <span class="icon has-text-primary">
                                 <i id="pokemon-refresh-icon" class="fas fa-sync-alt"></i>
                             </span>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
