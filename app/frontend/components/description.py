@@ -27,6 +27,13 @@ LOADING_TEMPLATE = """
                 </div>
             </div>
         </div>
+        <div class="media-right">
+            <button class="is-skeleton">
+                <span class="icon">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </span>
+            </button>
+        </div>
     </article>
     <div class="is-flex-grow-1 skeleton-block"></div>
     <div class="field is-grouped is-grouped-multiline has-text-7">
@@ -53,6 +60,7 @@ LOADING_TEMPLATE = """
     </div>
 </div>
 """
+
 
 TEMPLATE = """
 <div class="box is-flex is-flex-direction-column" style="height: 100%;">
