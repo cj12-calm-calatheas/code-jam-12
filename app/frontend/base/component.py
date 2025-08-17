@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import cast
+from uuid import uuid4
 
 from js import DOMParser
 from pyodide.ffi import JsDomElement
@@ -12,7 +13,8 @@ class Component(ABC):
 
     def __init__(self, root: JsDomElement) -> None:
         self.element: JsDomElement | None = None
-        self.root: JsDomElement = root
+        self.guid = uuid4()
+        self.root = root
 
     @abstractmethod
     def build(self) -> str:

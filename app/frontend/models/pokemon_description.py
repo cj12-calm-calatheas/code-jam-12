@@ -1,0 +1,47 @@
+from datetime import UTC, datetime
+from enum import StrEnum, auto
+
+from pydantic import BaseModel, Field
+
+
+class PokemonType(StrEnum):
+    """An enumeration of Pokemon types."""
+
+    BUG = auto()
+    DARK = auto()
+    DRAGON = auto()
+    ELECTRIC = auto()
+    FAIRY = auto()
+    FIGHTING = auto()
+    FIRE = auto()
+    FLYING = auto()
+    GHOST = auto()
+    GRASS = auto()
+    GROUND = auto()
+    ICE = auto()
+    NORMAL = auto()
+    POISON = auto()
+    PSYCHIC = auto()
+    ROCK = auto()
+    STEEL = auto()
+    WATER = auto()
+
+
+class PokemonDescription(BaseModel):
+    """A description of a Pokemon."""
+
+    ability: str = Field()
+    category: str = Field()
+    flavor_text: str = Field()
+    habitat: str = Field()
+    height: float = Field()
+    name: str = Field()
+    types: set[PokemonType] = Field()
+    weight: float = Field()
+
+
+class PokemonRecord(PokemonDescription):
+    """A description of a Pokemon with an image and timestamp."""
+
+    img_url: str = Field()
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))

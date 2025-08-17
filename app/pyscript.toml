@@ -14,14 +14,19 @@ files = [
     'components/footer.py',
     'components/header.py',
     'components/loading_caption_model.py',
+    'components/pokemon.py',
     'components/theme.py',
     'components/description.py',
+    'models/__init__.py',
+    'models/pokemon_description.py',
     'services/__init__.py',
     'services/camera.py',
     'services/caption.py',
+    'services/database.py',
+    'services/description.py',
+    'services/pokemon.py',
     'services/reader.py',
     'services/theme.py',
-    'services/description.py',
 ]
 from = 'frontend'
 to_folder = 'frontend'
