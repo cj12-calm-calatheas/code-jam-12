@@ -30,8 +30,6 @@ class Caption:
     _logger = logging.getLogger(__name__)
 
     def __init__(self) -> None:
-        self._reader = reader
-
         # Load the model and notify subscribers when it's ready
         of(MODEL_NAME).pipe(
             op.do_action(lambda _: self.is_loading_model.on_next(value=True)),
@@ -44,7 +42,7 @@ class Caption:
         ).subscribe(self.model)
 
         # Generate captions when an image is available and the model is loaded, and notify subscribers when done
-        combine_latest(self._reader.object_urls, self.model).pipe(
+        combine_latest(reader.object_urls, self.model).pipe(
             op.do_action(lambda _: self.is_generating_caption.on_next(value=True)),
             op.flat_map_latest(
                 lambda params: from_future(create_task(self._caption(*params))).pipe(

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Optional, cast, override
 
 from js import Blob, MediaStream, document
-from pyodide.ffi import JsDomElement, create_once_callable
+from pyodide.ffi import create_once_callable
 from pyodide.ffi.wrappers import add_event_listener
 
 from frontend.base import Component
@@ -35,11 +35,6 @@ TEMPLATE = """
 class Camera(Component):
     """Component for displaying the camera feed."""
 
-    def __init__(self, root: JsDomElement) -> None:
-        super().__init__(root)
-        self._camera = camera
-        self._reader = reader
-
     @override
     def build(self) -> str:
         return TEMPLATE
@@ -48,7 +43,7 @@ class Camera(Component):
     def on_destroy(self) -> None:
         self._subscription_is_acquiring_media_stream.dispose()
         self._subscription_media_stream.dispose()
-        self._camera.dispose_media_stream()
+        camera.dispose_media_stream()
 
     @override
     def on_render(self) -> None:
@@ -60,15 +55,15 @@ class Camera(Component):
 
         add_event_listener(self._camera_capture, "click", lambda _: self._handle_capture())
         add_event_listener(self._camera_close, "click", lambda _: self.destroy())
-        add_event_listener(self._camera_switch, "click", lambda _: self._camera.toggle_facing_mode())
+        add_event_listener(self._camera_switch, "click", lambda _: camera.toggle_facing_mode())
 
-        self._subscription_is_acquiring_media_stream = self._camera.is_acquiring_media_stream.subscribe(
+        self._subscription_is_acquiring_media_stream = camera.is_acquiring_media_stream.subscribe(
             lambda status: self._handle_is_acquiring_media_stream(status=status),
         )
 
-        self._subscription_media_stream = self._camera.media_stream.subscribe(self._handle_media_stream)
+        self._subscription_media_stream = camera.media_stream.subscribe(self._handle_media_stream)
 
-        self._camera.acquire_media_stream()
+        camera.acquire_media_stream()
 
     def _handle_capture(self) -> None:
         """Capture a snapshot from the camera stream."""
@@ -90,7 +85,7 @@ class Camera(Component):
 
     def _handle_capture_success(self, blob: Blob) -> None:
         """Handle successful capture of an image."""
-        self._reader.read(blob)
+        reader.read(blob)
         self.destroy()
 
     def _handle_is_acquiring_media_stream(self, *, status: bool) -> None:

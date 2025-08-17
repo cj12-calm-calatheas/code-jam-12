@@ -3,7 +3,7 @@ from enum import StrEnum, auto
 from functools import lru_cache
 from typing import override
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from .logger import LOGGER
@@ -94,10 +94,18 @@ MODEL_NAME = "Qwen/Qwen3-1.7B"
 TOKENIZER = AutoTokenizer.from_pretrained(MODEL_NAME)
 MODEL = AutoModelForCausalLM.from_pretrained(MODEL_NAME, torch_dtype="auto", device_map="auto")
 
-SYSTEM_PROMPT = f"""
+DESCRIPTION_PROMPT = f"""
 You are a helpful Pokemon professor.
 The user is a Pokemon trainer seeking information.
 The user will prompt you with a caption for a picture of a Pokemon.
+Answer using the following schema: {json.dumps(PokemonDescription.model_json_schema())}
+"""
+
+REPAIR_PROMPT = f"""
+You are a helpful Pokemon professor.
+The input is a Pokemon description and a validation error.
+The description needs to be repaired based on the error.
+Leave fields not mentioned in the error unchanged.
 Answer using the following schema: {json.dumps(PokemonDescription.model_json_schema())}
 """
 
@@ -108,7 +116,7 @@ def generate_description(user_prompt: str) -> PokemonDescription:
     messages = [
         {
             "role": "system",
-            "content": SYSTEM_PROMPT,
+            "content": DESCRIPTION_PROMPT,
         },
         {
             "role": "user",
@@ -116,6 +124,37 @@ def generate_description(user_prompt: str) -> PokemonDescription:
         },
     ]
 
+    thinking_content, content = _prompt(messages)
+
+    LOGGER.debug(thinking_content)
+
+    try:
+        result = PokemonDescription.model_validate_json(content)
+    except ValidationError as e:
+        result = _repair(content, e)
+
+    return result
+
+
+def _repair(content: str, validation_error: ValidationError) -> PokemonDescription:
+    """Attempt to repair the given content based on the given validation error."""
+    messages = [
+        {
+            "role": "system",
+            "content": REPAIR_PROMPT,
+        },
+        {"role": "user", "content": f"Description: {content}\n\nError: {validation_error}"},
+    ]
+
+    thinking_content, content = _prompt(messages)
+
+    LOGGER.debug(thinking_content)
+
+    return PokemonDescription.model_validate_json(content)
+
+
+def _prompt(messages: list[dict[str, str]]) -> tuple[str, str]:
+    """Prompt the model with the given messages and return the generated text."""
     text = TOKENIZER.apply_chat_template(
         messages,
         tokenize=False,
@@ -136,6 +175,4 @@ def generate_description(user_prompt: str) -> PokemonDescription:
     thinking_content = TOKENIZER.decode(output_ids[:index], skip_special_tokens=True).strip("\n")
     content = TOKENIZER.decode(output_ids[index:], skip_special_tokens=True).strip("\n")
 
-    LOGGER.debug(thinking_content)
-
-    return PokemonDescription.model_validate_json(content)
+    return thinking_content, content

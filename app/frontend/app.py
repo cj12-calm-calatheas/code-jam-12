@@ -1,9 +1,11 @@
 from typing import override
 
-from js import document
+from js import Event, document
+from pyodide.ffi.wrappers import add_event_listener
 
 from frontend.base import Component
-from frontend.components import Description, Footer, Header, LoadingCaptionModel
+from frontend.components import Footer, Header, LoadingCaptionModel, Pokemon
+from frontend.services import pokemon
 
 TEMPLATE = """
 <section id="app-container" class="hero is-fullheight container">
@@ -22,7 +24,21 @@ TEMPLATE = """
                     </p>
                 </div>
             </section>
-            <div id="description"></div>
+            <div class="level is-mobile">
+                <div class="level-left">
+                    <h2 class="title is-3 mb-0">Your Pokemon</h2>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <button id="pokemon-refresh" class="is-size-4">
+                            <span class="icon has-text-primary">
+                                <i id="pokemon-refresh-icon" class="fas fa-sync-alt"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="pokemon"></div>
         </div>
     </div>
     <div id="app-footer" class="hero-foot"></div>
@@ -41,7 +57,6 @@ class App(Component):
     def pre_destroy(self) -> None:
         self._footer.destroy()
         self._header.destroy()
-        self._description.destroy()
         self._loading_caption_model.destroy()
 
     @override
@@ -52,7 +67,27 @@ class App(Component):
         self._header = Header(document.getElementById("app-header"))
         self._header.render()
 
-        self._description = Description(document.getElementById("description"))
-
         self._notifications = document.getElementById("notifications")
         self._loading_caption_model = LoadingCaptionModel(self._notifications)
+
+        self._pokemon = Pokemon(document.getElementById("pokemon"))
+        self._pokemon.render()
+
+        self._pokemon_refresh = document.getElementById("pokemon-refresh")
+        self._pokemon_refresh_icon = document.getElementById("pokemon-refresh-icon")
+        add_event_listener(self._pokemon_refresh, "click", self._on_pokemon_refresh)
+
+        pokemon.is_refreshing.subscribe(
+            lambda is_refreshing: self._handle_pokemon_is_refreshing(is_refreshing=is_refreshing),
+        )
+
+    def _on_pokemon_refresh(self, _: Event) -> None:
+        """Handle the Pokemon refresh button click event."""
+        pokemon.refresh()
+
+    def _handle_pokemon_is_refreshing(self, *, is_refreshing: bool) -> None:
+        """Handle the Pokemon refresh state."""
+        if is_refreshing:
+            self._pokemon_refresh_icon.classList.add("fa-spin")
+        else:
+            self._pokemon_refresh_icon.classList.remove("fa-spin")

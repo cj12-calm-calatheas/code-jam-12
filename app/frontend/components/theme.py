@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING, cast, override
 
 from js import Event, document
-from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
 from frontend.base import Component
@@ -17,7 +16,7 @@ TEMPLATE = """
     </span>
     <div class="navbar-dropdown">
         <a id="select-theme-light" class="navbar-item">
-        Light
+            Light
         </a>
         <a id="select-theme-dark" class="navbar-item">
             Dark
@@ -32,10 +31,6 @@ TEMPLATE = """
 
 class Theme(Component):
     """A component for selecting the theme."""
-
-    def __init__(self, root: JsDomElement) -> None:
-        super().__init__(root=root)
-        self._theme = theme
 
     @override
     def build(self) -> str:
@@ -55,16 +50,16 @@ class Theme(Component):
         add_event_listener(self._select_theme_dark, "click", self._set_theme_dark)
         add_event_listener(self._select_theme_auto, "click", self._set_theme_auto)
 
-        self._current_theme_listener = self._theme.current.subscribe(lambda theme: self._update_current_theme(theme))
+        self._current_theme_listener = theme.current.subscribe(lambda theme: self._update_current_theme(theme))
 
     def _set_theme_light(self, _: Event) -> None:
-        self._theme.current.on_next("light")
+        theme.current.on_next("light")
 
     def _set_theme_dark(self, _: Event) -> None:
-        self._theme.current.on_next("dark")
+        theme.current.on_next("dark")
 
     def _set_theme_auto(self, _: Event) -> None:
-        self._theme.current.on_next(None)
+        theme.current.on_next(None)
 
     def _update_current_theme(self, theme: Theme_) -> None:
         if theme == "light":

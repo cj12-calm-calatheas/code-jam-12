@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING, cast, override
 
 from js import Event, document
-from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 
 from frontend.base import Component
@@ -16,11 +15,11 @@ TEMPLATE = """
 <nav class="tabs is-boxed is-fullwidth">
     <ul>
         <li>
-            <button id="camera-button" class="button is-large is-fullwidth is-text">
+            <a id="camera-button" class="is-size-4">
                 <span class="icon is-large has-text-primary">
                     <i class="fa-regular fa-camera"></i>
                 </span>
-            </button>
+            </a>
         </li>
         <li>
             <input
@@ -30,11 +29,11 @@ TEMPLATE = """
                 accept="image/png, image/jpeg"
                 style="display: none;"
             />
-            <button id="upload-button" class="button is-large is-fullwidth is-text">
+            <a id="upload-button" class="is-size-4">
                 <span class="icon is-large has-text-primary">
                     <i class="fas fa-upload"></i>
                 </span>
-            </button>
+            </a>
         </li>
     </ul>
 </nav>
@@ -43,10 +42,6 @@ TEMPLATE = """
 
 class Footer(Component):
     """Footer for the application."""
-
-    def __init__(self, root: JsDomElement) -> None:
-        super().__init__(root)
-        self._reader = reader
 
     @override
     def build(self) -> str:
@@ -74,7 +69,7 @@ class Footer(Component):
     def _on_file_input_change(self, _: Event) -> None:
         files = self._file_input.files
         if files.length:
-            self._reader.read(files.item(0))
+            reader.read(files.item(0))
 
     def _on_upload_button_click(self, _: Event) -> None:
         self._file_input.click()
