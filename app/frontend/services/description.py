@@ -20,7 +20,7 @@ class Description:
     _logger = logging.getLogger(__name__)
 
     def __init__(self) -> None:
-        # Generate descriptions when an image is available and the model is loaded, and notify subscribers when done
+        # Generate descriptions whenever a new caption is available
         caption.captions.pipe(
             op.do_action(lambda _: self.is_generating_description.on_next(value=True)),
             op.flat_map_latest(
