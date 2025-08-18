@@ -17,28 +17,24 @@ TEMPLATE = """
     <div id="app-body" class="hero-body mx-0">
         <div class="content">
             <h1 class="title is-1">Welcome to your Pokedex!</h1>
+            <p>Take a picture or upload an image to discover the Pokemon inside.</p>
             <section class="section px-0">
-                <div class="content">
-                    <p>
-                        Take a picture or upload an image to discover the Pokemon inside.
-                    </p>
-                </div>
-            </section>
-            <div class="level is-mobile">
-                <div class="level-left">
-                    <h2 class="title is-3 mb-0">Your Pokemon</h2>
-                </div>
-                <div class="level-right">
-                    <div class="level-item">
-                        <a id="pokemon-refresh" class="is-size-4">
-                            <span class="icon has-text-primary">
-                                <i id="pokemon-refresh-icon" class="fas fa-sync-alt"></i>
-                            </span>
-                        </a>
+                <div class="level is-mobile">
+                    <div class="level-left">
+                        <h2 class="title is-3 mb-0">Your Pokemon</h2>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a id="pokemon-refresh" class="is-size-4">
+                                <span class="icon has-text-primary">
+                                    <i id="pokemon-refresh-icon" class="fas fa-sync-alt"></i>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="pokemon"></div>
+                <div id="pokemon"></div>
+            </section>
         </div>
     </div>
     <div id="app-footer" class="hero-foot"></div>
