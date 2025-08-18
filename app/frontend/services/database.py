@@ -135,16 +135,22 @@ class Database:
         return await future
 
     def _handle_open_success(self, event: Event) -> None:
+        """Handle the successful opening of the database."""
         self._db = event.target.result  # type: ignore[result is available]
         self._logger.info("Opened IndexedDB.")
 
         _READY.set()
 
     def _handle_open_upgrade_needed(self, event: Event) -> None:
+        """Handle the upgrade needed event."""
         self._db = event.target.result  # type: ignore[result is available]
         self._db.createObjectStore(_COLLECTION_NAME, {"keyPath": "name"})
-        self._logger.info("Initialized IndexedDB.")
 
+        add_event_listener(event.target.transaction, "complete", self._handle_upgrade_transaction_complete)  # type: ignore[transaction is available]
+
+    def _handle_upgrade_transaction_complete(self, _: Event) -> None:
+        """Handle the completion of the upgrade transaction."""
+        self._logger.info("Initialized IndexedDB.")
         _READY.set()
 
 
