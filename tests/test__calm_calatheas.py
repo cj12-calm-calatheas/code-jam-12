@@ -1,6 +1,8 @@
 import re
+from pathlib import Path
 
-from conftest import PYSCRIPT_READY_TIMEOUT_MS
+import pytest
+from conftest import DESCRIPTION_GENERATED_TIMEOUT_MS, PYSCRIPT_READY_TIMEOUT_MS
 from playwright.sync_api import Page, expect
 
 
@@ -11,7 +13,7 @@ def test__main_page_has_welcome_message(app: Page) -> None:
     Asserts:
         - The welcome message is visible on the page.
     """
-    expect(app.get_by_text(re.compile("Hello from Python!"))).to_be_visible()
+    expect(app.get_by_text(re.compile("Welcome to your Pokedex!"))).to_be_visible()
 
 
 def test__default_theme_is_system_preferred(app: Page) -> None:
@@ -115,3 +117,102 @@ def test__theme_is_restored_after_refresh(app: Page) -> None:
 
     # Check that the dark theme is still applied
     expect(app.locator("html")).to_have_attribute("data-theme", "dark")
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        Path(__file__).parent / "assets/elephant.jpg",
+    ],
+)
+def test__description_is_generated_after_uploading_an_image(model_loaded: Page, path: Path) -> None:
+    """
+    Test that a description is generated after uploading an image through the file input.
+
+    Asserts:
+        - The description is generated and displayed after the image is uploaded.
+        - A placeholder is shown while the description is being generated.
+    """
+    model_loaded.locator("input[type='file']").set_input_files(path)
+
+    # Expect a placeholder to appear while the description is being generated
+    placeholder = model_loaded.locator(".pokemon-description", has=model_loaded.locator(".is-skeleton"))
+    expect(placeholder).to_be_visible()
+
+    # Wait for the description to be generated
+    description = model_loaded.locator(".pokemon-description", has_not=model_loaded.locator(".is-skeleton"))
+    expect(description).to_be_visible(timeout=DESCRIPTION_GENERATED_TIMEOUT_MS)
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        Path(__file__).parent / "assets/elephant.jpg",
+    ],
+)
+def test__description_is_still_available_after_refresh(model_loaded: Page, path: Path) -> None:
+    """
+    Test that the generated description is still available after refreshing the page.
+
+    Asserts:
+        - The description is still visible after a page refresh.
+    """
+    model_loaded.locator("input[type='file']").set_input_files(path)
+
+    # Expect a placeholder to appear while the description is being generated
+    placeholder = model_loaded.locator(".pokemon-description", has=model_loaded.locator(".is-skeleton"))
+    expect(placeholder).to_be_visible()
+
+    # Wait for the description to be generated
+    description = model_loaded.locator(".pokemon-description", has_not=model_loaded.locator(".is-skeleton"))
+    expect(description).to_be_visible(timeout=DESCRIPTION_GENERATED_TIMEOUT_MS)
+
+    # Refresh the page
+    model_loaded.reload()
+
+    model_loaded.wait_for_event(
+        event="console",
+        predicate=lambda event: "PyScript Ready" in event.text,
+        timeout=PYSCRIPT_READY_TIMEOUT_MS,
+    )
+
+    # Check that the description is still visible
+    after_refresh = model_loaded.locator(".pokemon-description", has_not=model_loaded.locator(".is-skeleton"))
+    expect(after_refresh).to_be_visible()
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        Path(__file__).parent / "assets/elephant.jpg",
+    ],
+)
+def test__description_can_be_deleted(model_loaded: Page, path: Path) -> None:
+    """
+    Test that the generated description can be deleted.
+
+    Asserts:
+        - The description is removed from the DOM after deletion.
+    """
+    model_loaded.locator("input[type='file']").set_input_files(path)
+
+    # Expect a placeholder to appear while the description is being generated
+    placeholder = model_loaded.locator(".pokemon-description", has=model_loaded.locator(".is-skeleton"))
+    expect(placeholder).to_be_visible()
+
+    # Wait for the description to be generated
+    description = model_loaded.locator(".pokemon-description", has_not=model_loaded.locator(".is-skeleton"))
+    expect(description).to_be_visible(timeout=DESCRIPTION_GENERATED_TIMEOUT_MS)
+
+    # Open the context menu
+    context_menu = description.locator(".dropdown")
+    expect(context_menu).to_be_visible()
+    context_menu.hover()
+
+    # Delete the description
+    delete_button = context_menu.locator("button", has_text="Delete")
+    expect(delete_button).to_be_visible()
+    delete_button.click()
+
+    # Check that the description is removed
+    expect(description).not_to_be_visible()

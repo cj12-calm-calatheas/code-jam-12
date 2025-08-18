@@ -1,6 +1,6 @@
 from typing import override
 
-import reactivex.operators as ops
+import reactivex.operators as op
 from js import document
 from pyodide.ffi import JsDomElement
 from reactivex import combine_latest
@@ -8,7 +8,7 @@ from reactivex import combine_latest
 from frontend.base import Component
 from frontend.components import Description
 from frontend.models import PokemonRecord
-from frontend.services import caption, description, pokemon, reader
+from frontend.services import pokemon
 
 EMPTY_PLACEHOLDER_TEMPLATE = """
 <p id="pokemon-empty-placeholder">Nothing to show here yet!</p>
@@ -36,29 +36,12 @@ class Pokemon(Component):
     def on_render(self) -> None:
         self._pokemon_grid = document.getElementById("pokemon-grid")
 
-        # Show a loading placeholder whenever the app is busy generating a new Pokemon
-        combine_latest(
-            caption.is_generating_caption,
-            description.is_generating_description,
-            reader.is_reading,
-        ).pipe(
-            ops.map(lambda is_loading: any(is_loading)),
-            ops.distinct_until_changed(),
-            ops.filter(lambda is_loading: is_loading),
-        ).subscribe(lambda _: self._render_loading_placeholder())
+        # Update the UI whenever the list of pokemon or the loading state changes
+        combine_latest(pokemon.pokemon, pokemon.is_generating).pipe(
+            op.take_until(self.destroyed),
+        ).subscribe(lambda params: self._render_pokemon(params[0], is_generating=params[1]))
 
-        # Sort the Pokemon by timestamp (newest first)
-        pokemon.pokemon.pipe(
-            ops.map(
-                lambda pokemon: sorted(
-                    pokemon,
-                    key=lambda p: p.timestamp,
-                    reverse=True,
-                ),
-            ),
-        ).subscribe(self._render_pokemon)
-
-    def _render_pokemon(self, pokemon: list[PokemonRecord]) -> None:
+    def _render_pokemon(self, pokemon: list[PokemonRecord], *, is_generating: bool) -> None:
         """Render the given list of Pokemon."""
         for component in self._current_pokemon:
             component.destroy()
@@ -68,7 +51,7 @@ class Pokemon(Component):
 
         self._current_pokemon = []
 
-        if not pokemon:
+        if not (pokemon or is_generating):
             self._pokemon_grid.innerHTML = EMPTY_PLACEHOLDER_TEMPLATE  # type: ignore[innerHTML is available]
             return
 
@@ -83,8 +66,11 @@ class Pokemon(Component):
 
             description.render()
 
-    def _render_loading_placeholder(self) -> None:
-        """Render a loading placeholder in the Pokemon grid."""
+        if is_generating:
+            self._render_generating_placeholder()
+
+    def _render_generating_placeholder(self) -> None:
+        """Render a placeholder in the Pokemon grid while generating."""
         if placeholder := document.getElementById("pokemon-empty-placeholder"):
             placeholder.remove()  # type: ignore[remove is available]
 

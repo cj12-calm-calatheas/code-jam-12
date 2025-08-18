@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     )
 
     log_level: str = Field(
-        default="INFO",
+        default="DEBUG",
         description="Logging level for the application",
     )
 

@@ -8,12 +8,8 @@ from frontend.base import Component
 from frontend.models import PokemonRecord
 from frontend.services import pokemon
 
-TYPE_TEMPLATE = """
-<span class="tag type-{type_class}">{type_name}</span>
-"""
-
 LOADING_TEMPLATE = """
-<div class="box is-flex is-flex-direction-column" style="height: 100%">
+<div class="pokemon-description box is-flex is-flex-direction-column" style="height: 100%">
     <article class="media">
         <figure class="media-left">
             <p class="image is-128x128 is-skeleton"></p>
@@ -23,39 +19,50 @@ LOADING_TEMPLATE = """
                 <p class="title is-4 is-skeleton">Name</p>
                 <p class="subtitle is-6 is-skeleton">Category</p>
                 <div class="tags has-addons">
-                    <span class="tag is-skeleton"></span>
+                    <span class="tag is-skeleton">Type</span>
                 </div>
             </div>
+        </div>
+        <div class="media-right">
+            <button class="is-skeleton">
+                <span class="icon">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </span>
+            </button>
         </div>
     </article>
     <div class="is-flex-grow-1 skeleton-block"></div>
     <div class="field is-grouped is-grouped-multiline has-text-7">
         <div class="control">
             <div class="tags has-addons">
-                <span class="tag is-skeleton"></span>
+                <span class="tag is-skeleton">Ability</span>
             </div>
         </div>
         <div class="control">
             <div class="tags has-addons">
-                <span class="tag is-skeleton"></span>
+                <span class="tag is-skeleton">Habitat</span>
             </div>
         </div>
         <div class="control">
             <div class="tags has-addons">
-                <span class="tag is-skeleton"></span>
+                <span class="tag is-skeleton">Height</span>
             </div>
         </div>
         <div class="control">
             <div class="tags has-addons">
-                <span class="tag is-skeleton"></span>
+                <span class="tag is-skeleton">Weight</span>
             </div>
         </div>
     </div>
 </div>
 """
 
+TYPE_TEMPLATE = """
+<span class="tag type-{type_class}">{type_name}</span>
+"""
+
 TEMPLATE = """
-<div class="box is-flex is-flex-direction-column" style="height: 100%;">
+<div class="pokemon-description box is-flex is-flex-direction-column" style="height: 100%;">
     <article class="media">
         <figure class="media-left">
             <p class="image is-128x128" style="overflow: hidden">
@@ -163,6 +170,7 @@ class Description(Component):
         add_event_listener(self._delete_button, "click", self._on_delete_button_click)
 
     def _on_delete_button_click(self, _: Event) -> None:
+        """Delete the current description."""
         if not self._description:
             return
 

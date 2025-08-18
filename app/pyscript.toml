@@ -9,6 +9,7 @@ files = [
     'app.py',
     'base/__init__.py',
     'base/component.py',
+    'base/service.py',
     'components/__init__.py',
     'components/camera.py',
     'components/footer.py',
