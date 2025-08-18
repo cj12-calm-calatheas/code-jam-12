@@ -16,11 +16,11 @@ TEMPLATE = """
     <div id="app-body" class="hero-body mx-0">
         <div class="content">
             <h1 class="title is-1">Hello from Python!</h1>
-            <h2 class="subtitle">This is a simple app using Pyodide.</h2>
+            <h2 class="subtitle">This is a Pokedex app using Pyodide.</h2>
             <section class="section px-0">
                 <div class="content">
                     <p>
-                        A general description of the app goes here.
+                        Take a picture or upload an image to discover the Pokemon inside!
                     </p>
                 </div>
             </section>
