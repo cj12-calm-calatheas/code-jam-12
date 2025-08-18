@@ -65,19 +65,15 @@ class Footer(Component):
         self._file_input = cast("JsFileInputElement", document.getElementById("file-input"))
         self._upload_button = cast("JsButtonElement", document.getElementById("upload-button"))
 
+        add_event_listener(self._camera_button, "click", self._on_camera_button_click)
+        add_event_listener(self._file_input, "change", self._on_file_input_change)
+        add_event_listener(self._upload_button, "click", self._on_upload_button_click)
+
         # Disable the controls while the model is loading or generating
         combine_latest(caption.is_loading_model, pokemon.is_generating).pipe(
             op.map(lambda is_loading: any(is_loading)),
             op.take_until(self.destroyed),
-        ).subscribe(
-            lambda is_loading: self._handle_is_loading(
-                is_loading=is_loading,
-            ),
-        )
-
-        add_event_listener(self._camera_button, "click", self._on_camera_button_click)
-        add_event_listener(self._file_input, "change", self._on_file_input_change)
-        add_event_listener(self._upload_button, "click", self._on_upload_button_click)
+        ).subscribe(lambda is_loading: self._handle_is_loading(is_loading=is_loading))
 
     def _handle_is_loading(self, *, is_loading: bool) -> None:
         """Handle the loading state of the footer."""
@@ -91,6 +87,7 @@ class Footer(Component):
             self._upload_button.removeAttribute("disabled")
 
     def _on_camera_button_click(self, event: Event) -> None:
+        """Open the camera modal."""
         if event.currentTarget.hasAttribute("disabled"):  # type: ignore[currentTarget is available]
             return
 
@@ -98,14 +95,17 @@ class Footer(Component):
         self._overlay.render()
 
     def _on_file_input_change(self, event: Event) -> None:
+        """Send the selected file to the reader."""
         if event.target.hasAttribute("disabled"):
             return
 
         files = self._file_input.files
+
         if files.length:
             reader.read(files.item(0))
 
     def _on_upload_button_click(self, event: Event) -> None:
+        """Trigger the hidden file input."""
         if event.currentTarget.hasAttribute("disabled"):  # type: ignore[currentTarget is available]
             return
 

@@ -25,7 +25,7 @@ class Camera(Service):
 
         self._acquire = Subject[None]()
 
-        # Acquire the media stream and notify subscribers when it's available
+        # Whenever acquisition is triggered, attempt to acquire the media stream
         self._acquire.pipe(
             op.do_action(lambda _: self.is_acquiring_media_stream.on_next(value=True)),
             op.flat_map_latest(

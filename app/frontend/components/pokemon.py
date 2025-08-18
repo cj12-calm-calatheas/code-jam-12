@@ -36,6 +36,7 @@ class Pokemon(Component):
     def on_render(self) -> None:
         self._pokemon_grid = document.getElementById("pokemon-grid")
 
+        # Update the UI whenever the list of pokemon or the loading state changes
         combine_latest(pokemon.pokemon, pokemon.is_generating).pipe(
             op.take_until(self.destroyed),
         ).subscribe(lambda params: self._render_pokemon(params[0], is_generating=params[1]))

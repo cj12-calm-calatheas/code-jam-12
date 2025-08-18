@@ -50,6 +50,7 @@ class Description(Service):
         return description
 
     def _handle_description_error(self, err: Exception) -> Observable:
+        """Handle errors that occur while generating descriptions."""
         console.error("Failed to generate description:", err)
         return empty()
 

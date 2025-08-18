@@ -170,6 +170,7 @@ class Description(Component):
         add_event_listener(self._delete_button, "click", self._on_delete_button_click)
 
     def _on_delete_button_click(self, _: Event) -> None:
+        """Delete the current description."""
         if not self._description:
             return
 

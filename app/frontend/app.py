@@ -1,5 +1,6 @@
 from typing import override
 
+import reactivex.operators as op
 from js import Event, document
 from pyodide.ffi.wrappers import add_event_listener
 
@@ -15,12 +16,11 @@ TEMPLATE = """
     </div>
     <div id="app-body" class="hero-body mx-0">
         <div class="content">
-            <h1 class="title is-1">Hello from Python!</h1>
-            <h2 class="subtitle">This is a Pokedex app using Pyodide.</h2>
+            <h1 class="title is-1">Welcome to your Pokedex!</h1>
             <section class="section px-0">
                 <div class="content">
                     <p>
-                        Take a picture or upload an image to discover the Pokemon inside!
+                        Take a picture or upload an image to discover the Pokemon inside.
                     </p>
                 </div>
             </section>
@@ -77,21 +77,20 @@ class App(Component):
         self._pokemon_refresh_icon = document.getElementById("pokemon-refresh-icon")
         add_event_listener(self._pokemon_refresh, "click", self._on_pokemon_refresh)
 
-        pokemon.is_refreshing.subscribe(
-            lambda is_refreshing: self._handle_pokemon_is_refreshing(
-                is_refreshing=is_refreshing,
-            ),
-        )
+        # Update the UI whenever the loading state changes
+        pokemon.is_refreshing.pipe(
+            op.take_until(self.destroyed),
+        ).subscribe(lambda is_refreshing: self._handle_pokemon_is_refreshing(is_refreshing=is_refreshing))
 
     def _on_pokemon_refresh(self, event: Event) -> None:
-        """Handle the Pokemon refresh button click event."""
+        """Refresh the list of Pokemon."""
         if event.currentTarget.hasAttribute("disabled"):  # type: ignore[currentTarget is available]
             return
 
         pokemon.refresh()
 
     def _handle_pokemon_is_refreshing(self, *, is_refreshing: bool) -> None:
-        """Handle the Pokemon refresh state."""
+        """Spin the refresh icon while the Pokemon list is being refreshed."""
         if is_refreshing:
             self._pokemon_refresh.setAttribute("disabled", "")
             self._pokemon_refresh_icon.classList.add("fa-spin")

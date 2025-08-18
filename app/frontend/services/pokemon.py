@@ -39,7 +39,7 @@ class Pokemon(Service):
             op.take_until(self.destroyed),
         ).subscribe(self.is_generating)
 
-        # When a new description is available, do the following:
+        # Whenever a new description is available, do the following:
         # 1. Retrieve the corresponding image URL
         # 2. Create a new record and add it to the list
         # 3. Trigger a refresh
@@ -63,7 +63,7 @@ class Pokemon(Service):
             op.take_until(self.destroyed),
         ).subscribe(lambda _: self.refresh())
 
-        # Retrieve the current list of Pokemon from the database. Sort the list by timestamp.
+        # On refresh, retrieve the current list of Pokemon from the database. Sort the list by timestamp.
         self._refresh.pipe(
             op.do_action(lambda _: self.is_refreshing.on_next(value=True)),
             op.flat_map_latest(
@@ -72,13 +72,7 @@ class Pokemon(Service):
                 ),
             ),
             op.catch(lambda err, _: self._handle_refresh_error(err)),
-            op.map(
-                lambda pokemon: sorted(
-                    pokemon,
-                    key=lambda p: p.timestamp,
-                    reverse=True,
-                ),
-            ),
+            op.map(lambda pokemon: sorted(pokemon, key=lambda p: p.timestamp, reverse=True)),
             op.take_until(self.destroyed),
         ).subscribe(self.pokemon)
 
@@ -102,14 +96,17 @@ class Pokemon(Service):
         self._refresh.on_next(None)
 
     def _handle_delete_error(self, err: Exception) -> Observable:
+        """Handle errors that occur while deleting a Pokemon."""
         console.error("Failed to delete pokemon:", err)
         return empty()
 
     def _handle_refresh_error(self, err: Exception) -> Observable:
+        """Handle errors that occur while refreshing the list of Pokemon."""
         console.error("Failed to refresh list of pokemon:", err)
         return empty()
 
     def _handle_update_error(self, err: Exception) -> Observable:
+        """Handle errors that occur while updating a Pokemon."""
         console.error("Failed to update pokemon:", err)
         return empty()
 

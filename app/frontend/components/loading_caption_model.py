@@ -19,6 +19,8 @@ class LoadingCaptionModel(Component):
 
     def __init__(self, root: JsDomElement) -> None:
         super().__init__(root)
+
+        # Update the UI whenever the loading state changes
         caption.is_loading_model.pipe(
             op.distinct_until_changed(),
             op.take_until(self.destroyed),
@@ -31,7 +33,7 @@ class LoadingCaptionModel(Component):
         return TEMPLATE
 
     def _handle_is_loading_update(self, *, is_loading: bool) -> None:
-        """Handle updates to the loading state."""
+        """Show the notification while the model is loading."""
         if is_loading:
             self.render()
         else:

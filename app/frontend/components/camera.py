@@ -61,10 +61,12 @@ class Camera(Component):
         add_event_listener(self._camera_close, "click", self._handle_close)
         add_event_listener(self._camera_switch, "click", self._handle_toggle_facing_mode)
 
+        # Update the UI whenever the media stream is being acquired
         self._camera.is_acquiring_media_stream.pipe(
             op.take_until(self.destroyed),
         ).subscribe(lambda status: self._handle_is_acquiring_media_stream(status=status))
 
+        # Update the UI whenever the media stream is available
         self._camera.media_stream.pipe(
             op.take_until(self.destroyed),
         ).subscribe(self._handle_media_stream)
@@ -93,23 +95,27 @@ class Camera(Component):
         canvas.toBlob(create_once_callable(self._handle_capture_success), "image/png")
 
     def _handle_capture_success(self, blob: Blob) -> None:
-        """Handle successful capture of an image."""
+        """Send the captured image to the reader."""
         reader.read(blob)
         self.destroy()
 
     def _handle_close(self, _: Event) -> None:
-        """Handle closing the camera."""
+        """Close the camera modal."""
         self.destroy()
 
     def _handle_is_acquiring_media_stream(self, *, status: bool) -> None:
-        """Handle updates to the acquiring media stream status."""
+        """Set the spinner on the capture button."""
         if status:
             self._camera_capture.classList.add("is-loading")
         else:
             self._camera_capture.classList.remove("is-loading")
 
     def _handle_media_stream(self, stream: Optional[MediaStream]) -> None:
-        """Handle updates to the media stream."""
+        """
+        Set the camera stream source.
+
+        If no source is given, disable the controls and show a loading indicator.
+        """
         self._camera_stream.srcObject = stream
 
         if not stream:

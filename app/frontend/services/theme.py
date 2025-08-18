@@ -42,10 +42,12 @@ class Theme(Service):
             else None,
         )
 
+        # Update the document theme whenever the current theme changes
         self.current.pipe(
             op.take_until(self.destroyed),
         ).subscribe(_update_document_theme)
 
+        # Update the local storage whenever the current theme changes
         self.current.pipe(
             op.take_until(self.destroyed),
         ).subscribe(_update_local_storage)

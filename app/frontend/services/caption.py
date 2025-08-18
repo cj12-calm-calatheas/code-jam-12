@@ -31,13 +31,11 @@ class Caption(Service):
         self.is_generating_caption = BehaviorSubject[bool](value=False)
         self.is_loading_model = BehaviorSubject[bool](value=False)
 
-        # Load the model and notify subscribers when it's ready
+        # Load the captioning model on startup
         of(MODEL_NAME).pipe(
             op.do_action(lambda _: self.is_loading_model.on_next(value=True)),
             op.flat_map_latest(
-                lambda model_name: from_future(
-                    create_task(self._load_model(model_name)),
-                ).pipe(
+                lambda model_name: from_future(create_task(self._load_model(model_name))).pipe(
                     op.finally_action(
                         lambda: self.is_loading_model.on_next(value=False),
                     ),
@@ -47,7 +45,7 @@ class Caption(Service):
             op.take_until(self.destroyed),
         ).subscribe(self.model)
 
-        # Generate captions when an image is available and the model is loaded, and notify subscribers when done
+        # Generate captions whenever an image is available and the model is loaded
         combine_latest(reader.object_urls, self.model).pipe(
             op.do_action(lambda _: self.is_generating_caption.on_next(value=True)),
             op.flat_map_latest(
@@ -74,20 +72,18 @@ class Caption(Service):
         return output.at(0).generated_text
 
     def _handle_caption_error(self, err: Exception) -> Observable:
+        """Handle errors that occur while generating captions."""
         console.error("Failed to generate caption:", err)
         return empty()
 
     def _handle_load_model_error(self, err: Exception) -> Observable:
+        """Handle errors that occur while loading the model."""
         console.error("Failed to load model:", err)
         return empty()
 
     async def _load_model(self, model_name: str) -> Model:
         """Load the given model."""
-        return await window.pipeline(
-            "image-to-text",
-            model_name,
-            {"dtype": "q8", "device": "wasm"},
-        )
+        return await window.pipeline("image-to-text", model_name, {"dtype": "q8", "device": "wasm"})
 
 
 caption = Caption()
