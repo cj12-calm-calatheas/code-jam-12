@@ -8,7 +8,7 @@ version = "0.0.0"
 
 dependencies = [
     "accelerate~=1.10",
-    "kernels>=0.9.0",
+    "kernels~=0.9",
     "pydantic~=2.11",
     "pydantic-settings~=2.10",
     "starlette~=0.47",
@@ -27,7 +27,7 @@ dev = [
     "pre-commit~=4.2",
     "pyodide-py~=0.28",
     "pyright==1.1.403",
-    "pyscript>=0.3.3",
+    "pyscript~=0.3",
     "pytest~=8.4",
     "pytest-asyncio~=1.0",
     "pytest-playwright~=0.7",
