@@ -19,6 +19,7 @@ TEMPLATE = """
         </span>
         <span>Favourite</span>
     </button>
+    <hr class="dropdown-divider" />
     <button id="delete-{delete_guid}" class="dropdown-item has-text-danger">
         <span class="icon">
             <i class="fas fa-trash"></i>
