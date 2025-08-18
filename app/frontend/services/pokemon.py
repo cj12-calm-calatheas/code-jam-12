@@ -27,7 +27,6 @@ class Pokemon(Service):
 
         self._delete = Subject[str]()
         self._put = Subject[PokemonRecord]()
-        self._favourite = Subject[str]()
         self._refresh = Subject[None]()
 
         # Combine the loading states from all relevant sources
