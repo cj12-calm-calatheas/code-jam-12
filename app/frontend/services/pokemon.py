@@ -45,7 +45,7 @@ class Pokemon(Service):
             op.with_latest_from(reader.object_urls),
             op.map(lambda params: PokemonRecord(**params[0].model_dump(), img_url=params[1])),
             op.take_until(self.destroyed),
-        ).subscribe(self._put)
+        ).subscribe(lambda pokemon: self.put(pokemon))
 
         # On put, update the database with the given record
         self._put.pipe(
