@@ -1,0 +1,25 @@
+{
+    "background_color": "white",
+    "display": "standalone",
+    "icons": [
+        {
+            "sizes": "16x16",
+            "src": "/assets/logo-16x16.png",
+            "type": "image/png"
+        },
+        {
+            "sizes": "48x48",
+            "src": "/assets/logo-48x48.png",
+            "type": "image/png"
+        },
+        {
+            "sizes": "128x128",
+            "src": "/assets/logo-128x128.png",
+            "type": "image/png"
+        }
+    ],
+    "name": "Pokedexter",
+    "short_name": "Pokedexter",
+    "start_url": ".",
+    "theme_color": "black"
+}
