@@ -17,7 +17,7 @@ TEMPLATE = """
         <span class="icon">
             <i class="fas fa-heart"></i>
         </span>
-        <span>Favourite</span>
+        <span>{favourite_text}</span>
     </button>
     <hr class="dropdown-divider" />
     <button id="delete-{delete_guid}" class="dropdown-item has-text-danger">
@@ -41,8 +41,12 @@ class DescriptionDropdown(Component):
 
     @override
     def build(self) -> str:
+        if not self._parent._description:
+            return ""  # Unreachable
+
         return TEMPLATE.format(
             favourite_guid=self._favourite_guid,
+            favourite_text="Unfavourite" if self._parent._description.favourite else "Favourite",
             delete_guid=self._delete_guid,
         )
 
