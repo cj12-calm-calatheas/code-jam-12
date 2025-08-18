@@ -21,6 +21,7 @@ class Pokemon:
     _logger = logging.getLogger(__name__)
 
     _delete = Subject[str]()
+    _favourite = Subject[str]()
     _refresh = Subject[None]()
 
     def __init__(self) -> None:
@@ -41,6 +42,13 @@ class Pokemon:
             op.catch(lambda err, _: self._handle_delete_error(err)),
         ).subscribe(lambda _: self.refresh())
 
+        # When the user clicks the "favourite button", toggle the
+        # status of the pokemon in the database
+        self._favourite.pipe(
+            op.flat_map_latest(lambda name: from_future(create_task(database.favourite(name)))),
+            op.catch(lambda err, _: self._handle_favourite_error(err)),
+        ).subscribe(lambda _: self.refresh())
+
         # Retrieve the current list of Pokemon from the database
         self._refresh.pipe(
             op.do_action(lambda _: self.is_refreshing.on_next(value=True)),
@@ -59,12 +67,20 @@ class Pokemon:
         """Delete the pokemon with the given name."""
         self._delete.on_next(name)
 
+    def favourite(self, name: str) -> None:
+        """Mark a pokemon with the given name as a favourite."""
+        self._favourite.on_next(name)
+
     def refresh(self) -> None:
         """Trigger a refresh of the descriptions."""
         self._refresh.on_next(None)
 
     def _handle_delete_error(self, err: Exception) -> Observable:
         self._logger.error("Failed to delete pokemon", exc_info=err)
+        return empty()
+
+    def _handle_favourite_error(self, err: Exception) -> Observable:
+        self._logger.error("Failed to favourite pokemon", exc_info=err)
         return empty()
 
     def _handle_refresh_error(self, err: Exception) -> Observable:

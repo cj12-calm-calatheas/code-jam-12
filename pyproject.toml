@@ -19,6 +19,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "bitsandbytes>=0.47.0",
     "mkdocs~=1.6",
     "mkdocs-material~=9.6",
     "mkdocstrings~=0.29",
@@ -67,6 +68,7 @@ select = ["ALL"]
 "**/conftest.py" = ["INP001"]
 "**/test__*.py" = ["INP001", "S101", "PLR2004"]
 "app/calm_calatheas/services/image_captioner.py" = ["RUF006"]
+"app/frontend/components/description_dropdown.py" = ["SLF001"]
 "app/main.py" = ["INP001"]
 "typings/js.pyi" = ["ALL"]
 
