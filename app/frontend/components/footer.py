@@ -56,18 +56,9 @@ class Footer(Component):
 
     @override
     def on_render(self) -> None:
-        self._camera_button = cast(
-            "JsButtonElement",
-            document.getElementById("camera-button"),
-        )
-        self._file_input = cast(
-            "JsFileInputElement",
-            document.getElementById("file-input"),
-        )
-        self._upload_button = cast(
-            "JsButtonElement",
-            document.getElementById("upload-button"),
-        )
+        self._camera_button = cast("JsButtonElement", document.getElementById("camera-button"))
+        self._file_input = cast("JsFileInputElement", document.getElementById("file-input"))
+        self._upload_button = cast("JsButtonElement", document.getElementById("upload-button"))
 
         # Disable the controls while the model is loading or generating
         combine_latest(caption.is_loading_model, pokemon.is_generating).pipe(

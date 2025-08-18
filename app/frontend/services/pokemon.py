@@ -1,6 +1,6 @@
-import logging
 from asyncio import create_task
 
+from js import console
 from reactivex import Observable, combine_latest, empty, from_future
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject, Subject
@@ -16,16 +16,14 @@ from .reader import reader
 class Pokemon:
     """Service that maintains a list of the user's current Pokemon."""
 
-    is_generating = BehaviorSubject[bool](value=False)
-    is_refreshing = BehaviorSubject[bool](value=False)
-    pokemon = BehaviorSubject[list[PokemonRecord]](value=[])
-
-    _logger = logging.getLogger(__name__)
-
-    _delete = Subject[str]()
-    _refresh = Subject[None]()
-
     def __init__(self) -> None:
+        self.is_generating = BehaviorSubject[bool](value=False)
+        self.is_refreshing = BehaviorSubject[bool](value=False)
+        self.pokemon = BehaviorSubject[list[PokemonRecord]](value=[])
+
+        self._delete = Subject[str]()
+        self._refresh = Subject[None]()
+
         # Combine the loading states from all relevant sources
         combine_latest(
             caption.is_generating_caption,
@@ -88,15 +86,15 @@ class Pokemon:
         self._refresh.on_next(None)
 
     def _handle_delete_error(self, err: Exception) -> Observable:
-        self._logger.error("Failed to delete pokemon", exc_info=err)
+        console.error("Failed to delete pokemon:", err)
         return empty()
 
     def _handle_refresh_error(self, err: Exception) -> Observable:
-        self._logger.error("Failed to refresh list of pokemon", exc_info=err)
+        console.error("Failed to refresh list of pokemon:", err)
         return empty()
 
     def _handle_update_error(self, err: Exception) -> Observable:
-        self._logger.error("Failed to update pokemon", exc_info=err)
+        console.error("Failed to update pokemon:", err)
         return empty()
 
 

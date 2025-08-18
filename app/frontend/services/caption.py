@@ -1,9 +1,8 @@
-import logging
 from asyncio import Future, create_task
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from js import window
+from js import console, window
 from reactivex import Observable, combine_latest, empty, from_future, of
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject, ReplaySubject
@@ -21,15 +20,13 @@ MODEL_NAME = "Xenova/vit-gpt2-image-captioning"
 class Caption:
     """Service to generate captions for images."""
 
-    captions = ReplaySubject[str]()
-    model = ReplaySubject[Model]()
-
-    is_generating_caption = BehaviorSubject[bool](value=False)
-    is_loading_model = BehaviorSubject[bool](value=False)
-
-    _logger = logging.getLogger(__name__)
-
     def __init__(self) -> None:
+        self.captions = ReplaySubject[str]()
+        self.model = ReplaySubject[Model]()
+
+        self.is_generating_caption = BehaviorSubject[bool](value=False)
+        self.is_loading_model = BehaviorSubject[bool](value=False)
+
         # Load the model and notify subscribers when it's ready
         of(MODEL_NAME).pipe(
             op.do_action(lambda _: self.is_loading_model.on_next(value=True)),
@@ -64,11 +61,11 @@ class Caption:
         return output.at(0).generated_text
 
     def _handle_caption_error(self, err: Exception) -> Observable:
-        self._logger.error("Failed to generate caption", exc_info=err)
+        console.error("Failed to generate caption:", err)
         return empty()
 
     def _handle_load_model_error(self, err: Exception) -> Observable:
-        self._logger.error("Failed to load model", exc_info=err)
+        console.error("Failed to load model:", err)
         return empty()
 
     async def _load_model(self, model_name: str) -> Model:

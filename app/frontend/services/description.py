@@ -1,6 +1,6 @@
-import logging
 from asyncio import create_task
 
+from js import console
 from pyodide.http import pyfetch
 from reactivex import Observable, empty, from_future
 from reactivex import operators as op
@@ -14,12 +14,10 @@ from .caption import caption
 class Description:
     """Service to generate descriptions from captions."""
 
-    is_generating_description = BehaviorSubject[bool](value=False)
-    descriptions = ReplaySubject[PokemonDescription]()
-
-    _logger = logging.getLogger(__name__)
-
     def __init__(self) -> None:
+        self.is_generating_description = BehaviorSubject[bool](value=False)
+        self.descriptions = ReplaySubject[PokemonDescription]()
+
         # Generate descriptions whenever a new caption is available
         caption.captions.pipe(
             op.do_action(lambda _: self.is_generating_description.on_next(value=True)),
@@ -35,7 +33,7 @@ class Description:
 
     async def _describe(self, caption: str) -> PokemonDescription:
         """Generate a description from the given caption."""
-        self._logger.debug("Generating description for caption: %s", caption)
+        console.log("Generating description for caption:", caption)
 
         response = await pyfetch(f"/describe?prompt={caption}")
 
@@ -43,12 +41,12 @@ class Description:
 
         data = await response.json()
 
-        self._logger.debug("Generated description: %s", data)
+        console.log("Generated description:", data)
 
         return PokemonDescription.model_validate(data)
 
     def _handle_description_error(self, err: Exception) -> Observable:
-        self._logger.error("Failed to generate description", exc_info=err)
+        console.error("Failed to generate description:", err)
         return empty()
 
 

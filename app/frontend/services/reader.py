@@ -1,8 +1,7 @@
-import logging
 from asyncio import Future
 from typing import Union
 
-from js import Blob, File, FileReader
+from js import Blob, File, FileReader, console
 from pyodide.ffi.wrappers import add_event_listener
 from reactivex import Observable, empty, from_future
 from reactivex import operators as op
@@ -14,13 +13,12 @@ type Readable = Union[Blob, File]
 class Reader:
     """Service for reading files and generating object URLs."""
 
-    is_reading = BehaviorSubject[bool](value=False)
-    object_urls = ReplaySubject[str]()
-
-    _files = Subject[Readable]()
-    _logger = logging.getLogger(__name__)
-
     def __init__(self) -> None:
+        self.is_reading = BehaviorSubject[bool](value=False)
+        self.object_urls = ReplaySubject[str]()
+
+        self._files = Subject[Readable]()
+
         self._files.pipe(
             op.do_action(lambda _: self.is_reading.on_next(value=True)),
             op.flat_map_latest(
@@ -43,7 +41,7 @@ class Reader:
 
     def _handle_reader_error(self, err: Exception) -> Observable:
         """Handle errors that occur while reading files."""
-        self._logger.error("Error reading file", exc_info=err)
+        console.error("Error reading file:", err)
         return empty()
 
     def _read_file(self, file_: Readable) -> Future[str]:

@@ -1,7 +1,6 @@
 import asyncio
-import logging
 
-from js import JSON, Event, indexedDB
+from js import JSON, Event, console, indexedDB
 from pyodide.ffi.wrappers import add_event_listener
 
 from frontend.models import PokemonRecord
@@ -14,8 +13,6 @@ _READY = asyncio.Event()
 
 class Database:
     """Service for interacting with IndexedDB."""
-
-    _logger = logging.getLogger(__name__)
 
     def __init__(self) -> None:
         open_ = indexedDB.open(_DB_NAME, _DB_VERSION)
@@ -137,7 +134,7 @@ class Database:
     def _handle_open_success(self, event: Event) -> None:
         """Handle the successful opening of the database."""
         self._db = event.target.result  # type: ignore[result is available]
-        self._logger.info("Opened IndexedDB.")
+        console.log("Opened IndexedDB.")
 
         _READY.set()
 
@@ -150,7 +147,7 @@ class Database:
 
     def _handle_upgrade_transaction_complete(self, _: Event) -> None:
         """Handle the completion of the upgrade transaction."""
-        self._logger.info("Initialized IndexedDB.")
+        console.log("Initialized IndexedDB.")
         _READY.set()
 
 

@@ -1,7 +1,6 @@
-import logging
 from typing import Literal, Optional, cast
 
-from js import MediaStream, localStorage, navigator
+from js import MediaStream, console, localStorage, navigator
 from pyodide.webloop import PyodideFuture
 from reactivex import Observable, Subject, empty
 from reactivex import operators as op
@@ -16,13 +15,12 @@ type FacingMode = Literal["user", "environment"]
 class Camera:
     """A service for accessing the user's camera."""
 
-    media_stream = BehaviorSubject[Optional[MediaStream]](value=None)
-    is_acquiring_media_stream = BehaviorSubject[bool](value=False)
-
-    _acquire = Subject[None]()
-    _logger = logging.getLogger(__name__)
-
     def __init__(self) -> None:
+        self.media_stream = BehaviorSubject[Optional[MediaStream]](value=None)
+        self.is_acquiring_media_stream = BehaviorSubject[bool](value=False)
+
+        self._acquire = Subject[None]()
+
         # Acquire the media stream and notify subscribers when it's available
         self._acquire.pipe(
             op.do_action(lambda _: self.is_acquiring_media_stream.on_next(value=True)),
@@ -54,7 +52,6 @@ class Camera:
         """Trigger the process of acquiring the media stream."""
         if self.media_stream.value:
             return
-
         self._acquire.on_next(None)
 
     def toggle_facing_mode(self) -> None:
@@ -78,7 +75,7 @@ class Camera:
 
     def _handle_acquisition_error(self, err: Exception) -> Observable:
         """Handle errors that occur while acquiring the media stream."""
-        self._logger.error("Error acquiring media stream", exc_info=err)
+        console.error("Error acquiring media stream:", err)
         return empty()
 
     @property
@@ -94,6 +91,3 @@ class Camera:
     @_preferred_facing_mode.setter
     def _preferred_facing_mode(self, value: FacingMode) -> None:
         localStorage.setItem(LOCAL_STORAGE_KEY, value)
-
-
-camera = Camera()
