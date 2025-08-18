@@ -14,10 +14,8 @@ from .caption import caption
 class Description:
     """Service to generate descriptions from captions."""
 
-    descriptions = ReplaySubject[PokemonDescription]()
-
     is_generating_description = BehaviorSubject[bool](value=False)
-    is_loading_model = BehaviorSubject[bool](value=False)
+    descriptions = ReplaySubject[PokemonDescription]()
 
     _logger = logging.getLogger(__name__)
 
