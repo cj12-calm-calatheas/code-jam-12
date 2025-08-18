@@ -44,12 +44,7 @@ class Pokemon(Service):
         # Whenever a new description is available, get the corresponding image url and create an new database record
         description.descriptions.pipe(
             op.with_latest_from(reader.object_urls),
-            op.map(
-                lambda params: PokemonRecord(
-                    **params[0].model_dump(),
-                    img_url=params[1],
-                ),
-            ),
+            op.map(lambda params: PokemonRecord(**params[0].model_dump(), img_url=params[1])),
             op.take_until(self.destroyed),
         ).subscribe(self._put)
 
@@ -68,7 +63,7 @@ class Pokemon(Service):
         ).subscribe(lambda _: self.refresh())
 
         # Retrieve the current list of Pokemon from the database
-        # On refresh, retrieve the current list of Pokemon from the database. Sort the list by timestamp.
+        # On refresh, retrieve the current list of Pokemon from the database. Sort the list by timestamp
         self._refresh.pipe(
             op.do_action(lambda _: self.is_refreshing.on_next(value=True)),
             op.flat_map_latest(
