@@ -1,12 +1,11 @@
 from typing import override
 
-from js import Event, document
+from js import document
 from pyodide.ffi import JsDomElement
-from pyodide.ffi.wrappers import add_event_listener
 
 from frontend.base import Component
+from frontend.components.description_dropdown import DescriptionDropdown
 from frontend.models import PokemonRecord
-from frontend.services import pokemon
 
 LOADING_TEMPLATE = """
 <div class="pokemon-description box is-flex is-flex-direction-column" style="height: 100%">
@@ -71,7 +70,12 @@ TEMPLATE = """
         </figure>
         <div class="media-content">
             <div>
-                <p class="title is-4">{name}</p>
+                <p class="title is-4 is-flex">
+                    <span class="is-flex-grow-1">{name}</span>
+                    <span class="{favourite_icon_class} icon has-text-danger">
+                        <i class="fas fa-heart"></i>
+                    </span>
+                </p>
                 <p class="subtitle is-6">The {category} Pokemon</p>
                 <div class="tags has-addons">{types}</div>
             </div>
@@ -85,16 +89,7 @@ TEMPLATE = """
                         </span>
                     </button>
                 </div>
-                <div class="dropdown-menu" id="dropdown-{guid}" role="menu">
-                    <div class="dropdown-content">
-                        <button id="delete-{guid}" class="dropdown-item has-text-danger">
-                            <span class="icon">
-                                <i class="fas fa-trash"></i>
-                            </span>
-                            <span>Delete</span>
-                        </button>
-                    </div>
-                </div>
+                <div class="dropdown-menu" id="dropdown-{guid}" role="menu"></div>
             </div>
         </div>
     </article>
@@ -149,6 +144,7 @@ class Description(Component):
 
         return TEMPLATE.format(
             guid=self.guid,
+            favourite_icon_class="" if self._description.favourite else "is-hidden",
             image_url=self._description.img_url,
             name=self._description.name,
             category=self._description.category.capitalize(),
@@ -165,13 +161,13 @@ class Description(Component):
         if not self._description:
             return
 
-        self._delete_button = document.getElementById(f"delete-{self.guid}")
+        self._description_dropdown = DescriptionDropdown(
+            document.getElementById(f"dropdown-{self.guid}"),
+            self._description,
+        )
 
-        add_event_listener(self._delete_button, "click", self._on_delete_button_click)
+        self._description_dropdown.render()
 
-    def _on_delete_button_click(self, _: Event) -> None:
-        """Delete the current description."""
-        if not self._description:
-            return
-
-        pokemon.delete(self._description.name)
+    @override
+    def pre_destroy(self) -> None:
+        self._description_dropdown.destroy()

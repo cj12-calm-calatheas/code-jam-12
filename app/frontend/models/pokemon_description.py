@@ -44,4 +44,5 @@ class PokemonRecord(PokemonDescription):
     """A description of a Pokemon with an image and timestamp, as stored in the database."""
 
     img_url: str = Field()
+    favourite: bool = Field(default=False)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))

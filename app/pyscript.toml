@@ -18,6 +18,7 @@ files = [
     'components/pokemon.py',
     'components/theme.py',
     'components/description.py',
+    'components/description_dropdown.py',
     'models/__init__.py',
     'models/pokemon_description.py',
     'services/__init__.py',

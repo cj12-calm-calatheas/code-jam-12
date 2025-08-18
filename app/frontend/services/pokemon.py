@@ -26,6 +26,7 @@ class Pokemon(Service):
         self.pokemon = BehaviorSubject[list[PokemonRecord]](value=[])
 
         self._delete = Subject[str]()
+        self._put = Subject[PokemonRecord]()
         self._refresh = Subject[None]()
 
         # Combine the loading states from all relevant sources
@@ -39,18 +40,15 @@ class Pokemon(Service):
             op.take_until(self.destroyed),
         ).subscribe(self.is_generating)
 
-        # Whenever a new description is available, do the following:
-        # 1. Retrieve the corresponding image URL
-        # 2. Create a new record and add it to the list
-        # 3. Trigger a refresh
+        # Whenever a new description is available, get the corresponding image url and create an new database record
         description.descriptions.pipe(
             op.with_latest_from(reader.object_urls),
-            op.map(
-                lambda params: PokemonRecord(
-                    **params[0].model_dump(),
-                    img_url=params[1],
-                ),
-            ),
+            op.map(lambda params: PokemonRecord(**params[0].model_dump(), img_url=params[1])),
+            op.take_until(self.destroyed),
+        ).subscribe(lambda pokemon: self.put(pokemon))
+
+        # On put, update the database with the given record
+        self._put.pipe(
             op.flat_map_latest(lambda pokemon: from_future(create_task(database.put(pokemon)))),
             op.catch(lambda err, _: self._handle_update_error(err)),
             op.take_until(self.destroyed),
@@ -63,7 +61,7 @@ class Pokemon(Service):
             op.take_until(self.destroyed),
         ).subscribe(lambda _: self.refresh())
 
-        # On refresh, retrieve the current list of Pokemon from the database. Sort the list by timestamp.
+        # On refresh, retrieve the current list of Pokemon from the database. Sort the list by timestamp
         self._refresh.pipe(
             op.do_action(lambda _: self.is_refreshing.on_next(value=True)),
             op.flat_map_latest(
@@ -85,11 +83,16 @@ class Pokemon(Service):
         self.is_refreshing.dispose()
         self.pokemon.dispose()
         self._delete.dispose()
+        self._put.dispose()
         self._refresh.dispose()
 
     def delete(self, name: str) -> None:
         """Delete the pokemon with the given name."""
         self._delete.on_next(name)
+
+    def put(self, pokemon: PokemonRecord) -> None:
+        """Update the database with the given pokemon."""
+        self._put.on_next(pokemon)
 
     def refresh(self) -> None:
         """Trigger a refresh of the list."""
@@ -98,6 +101,10 @@ class Pokemon(Service):
     def _handle_delete_error(self, err: Exception) -> Observable:
         """Handle errors that occur while deleting a Pokemon."""
         console.error("Failed to delete pokemon:", err)
+        return empty()
+
+    def _handle_favourite_error(self, err: Exception) -> Observable:
+        console.error("Failed to favourite pokemon", err)
         return empty()
 
     def _handle_refresh_error(self, err: Exception) -> Observable:
