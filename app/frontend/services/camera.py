@@ -1,4 +1,4 @@
-from typing import Literal, Optional, cast
+from typing import Literal, Optional, cast, override
 
 from js import MediaStream, console, localStorage, navigator
 from pyodide.webloop import PyodideFuture
@@ -6,16 +6,20 @@ from reactivex import Observable, Subject, empty
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject
 
+from frontend.base import Service
+
 FACING_MODES = {"user", "environment"}
 LOCAL_STORAGE_KEY = "preferred_facing_mode"
 
 type FacingMode = Literal["user", "environment"]
 
 
-class Camera:
+class Camera(Service):
     """A service for accessing the user's camera."""
 
     def __init__(self) -> None:
+        super().__init__()
+
         self.media_stream = BehaviorSubject[Optional[MediaStream]](value=None)
         self.is_acquiring_media_stream = BehaviorSubject[bool](value=False)
 
@@ -30,6 +34,7 @@ class Camera:
                 ),
             ),
             op.catch(lambda err, _: self._handle_acquisition_error(err)),
+            op.take_until(self.destroyed),
         ).subscribe(self.media_stream)
 
     def dispose_media_stream(self) -> None:
@@ -42,8 +47,8 @@ class Camera:
 
         self.media_stream.on_next(None)
 
-    def destroy(self) -> None:
-        """Clean up the camera resources."""
+    @override
+    def on_destroy(self) -> None:
         self.dispose_media_stream()
         self._acquire.dispose()
         self.media_stream.dispose()
@@ -52,14 +57,12 @@ class Camera:
         """Trigger the process of acquiring the media stream."""
         if self.media_stream.value:
             return
+
         self._acquire.on_next(None)
 
     def toggle_facing_mode(self) -> None:
         """Switch the preferred facing mode between user and environment."""
-        if self._preferred_facing_mode == "user":
-            self._preferred_facing_mode = "environment"
-        else:
-            self._preferred_facing_mode = "user"
+        self._preferred_facing_mode = "environment" if self._preferred_facing_mode == "user" else "user"
 
         self.dispose_media_stream()
         self.acquire_media_stream()

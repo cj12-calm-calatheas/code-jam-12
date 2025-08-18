@@ -1,11 +1,13 @@
 from asyncio import Future, create_task
 from collections.abc import Callable
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, override
 
 from js import console, window
 from reactivex import Observable, combine_latest, empty, from_future, of
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject, ReplaySubject
+
+from frontend.base import Service
 
 from .reader import reader
 
@@ -17,10 +19,12 @@ type Model = Callable[[str], Future[ModelOutput]]
 MODEL_NAME = "Xenova/vit-gpt2-image-captioning"
 
 
-class Caption:
+class Caption(Service):
     """Service to generate captions for images."""
 
     def __init__(self) -> None:
+        super().__init__()
+
         self.captions = ReplaySubject[str]()
         self.model = ReplaySubject[Model]()
 
@@ -40,6 +44,7 @@ class Caption:
                 ),
             ),
             op.catch(lambda err, _: self._handle_load_model_error(err)),
+            op.take_until(self.destroyed),
         ).subscribe(self.model)
 
         # Generate captions when an image is available and the model is loaded, and notify subscribers when done
@@ -53,7 +58,15 @@ class Caption:
                 ),
             ),
             op.catch(lambda err, _: self._handle_caption_error(err)),
+            op.take_until(self.destroyed),
         ).subscribe(self.captions)
+
+    @override
+    def on_destroy(self) -> None:
+        self.captions.dispose()
+        self.model.dispose()
+        self.is_generating_caption.dispose()
+        self.is_loading_model.dispose()
 
     async def _caption(self, url: str, model: Model) -> str:
         """Generate a caption for the image at the given URL."""

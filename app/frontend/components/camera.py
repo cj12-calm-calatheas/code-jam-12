@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Optional, cast, override
 
+import reactivex.operators as op
 from js import Blob, Event, MediaStream, document
 from pyodide.ffi import JsDomElement, create_once_callable
 from pyodide.ffi.wrappers import add_event_listener
@@ -46,8 +47,6 @@ class Camera(Component):
 
     @override
     def on_destroy(self) -> None:
-        self._subscription_is_acquiring_media_stream.dispose()
-        self._subscription_media_stream.dispose()
         self._camera.destroy()
 
     @override
@@ -62,11 +61,13 @@ class Camera(Component):
         add_event_listener(self._camera_close, "click", self._handle_close)
         add_event_listener(self._camera_switch, "click", self._handle_toggle_facing_mode)
 
-        self._subscription_is_acquiring_media_stream = self._camera.is_acquiring_media_stream.subscribe(
-            lambda status: self._handle_is_acquiring_media_stream(status=status),
-        )
+        self._camera.is_acquiring_media_stream.pipe(
+            op.take_until(self.destroyed),
+        ).subscribe(lambda status: self._handle_is_acquiring_media_stream(status=status))
 
-        self._subscription_media_stream = self._camera.media_stream.subscribe(self._handle_media_stream)
+        self._camera.media_stream.pipe(
+            op.take_until(self.destroyed),
+        ).subscribe(self._handle_media_stream)
 
         self._camera.acquire_media_stream()
 

@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from js import DOMParser
 from pyodide.ffi import JsDomElement
+from reactivex import Subject
 
 
 class Component(ABC):
@@ -12,6 +13,7 @@ class Component(ABC):
     parser = DOMParser.new()  # type: ignore[]
 
     def __init__(self, root: JsDomElement) -> None:
+        self.destroyed = Subject[None]()
         self.element: JsDomElement | None = None
         self.guid = uuid4()
         self.root = root
@@ -22,6 +24,8 @@ class Component(ABC):
 
     def destroy(self) -> None:
         """Destroy the component and clean up resources."""
+        self.destroyed.on_next(None)
+        self.destroyed.dispose()
         self.remove()
         self.on_destroy()
 

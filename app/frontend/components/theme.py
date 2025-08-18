@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, cast, override
 
+import reactivex.operators as op
 from js import Event, document
 from pyodide.ffi.wrappers import add_event_listener
 
@@ -50,7 +51,9 @@ class Theme(Component):
         add_event_listener(self._select_theme_dark, "click", self._set_theme_dark)
         add_event_listener(self._select_theme_auto, "click", self._set_theme_auto)
 
-        self._current_theme_listener = theme.current.subscribe(lambda theme: self._update_current_theme(theme))
+        self._current_theme_listener = theme.current.pipe(
+            op.take_until(self.destroyed),
+        ).subscribe(lambda theme: self._update_current_theme(theme))
 
     def _set_theme_light(self, _: Event) -> None:
         theme.current.on_next("light")

@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, cast, override
 
 import reactivex.operators as op
 from js import Event, document
+from pyodide.ffi import JsDomElement
 from pyodide.ffi.wrappers import add_event_listener
 from reactivex import combine_latest
 
@@ -45,13 +46,17 @@ TEMPLATE = """
 class Footer(Component):
     """Footer for the application."""
 
+    def __init__(self, root: JsDomElement) -> None:
+        super().__init__(root)
+        self._overlay: Camera | None = None
+
     @override
     def build(self) -> str:
         return TEMPLATE
 
     @override
     def pre_destroy(self) -> None:
-        if hasattr(self, "_overlay"):
+        if self._overlay:
             self._overlay.destroy()
 
     @override
@@ -63,6 +68,7 @@ class Footer(Component):
         # Disable the controls while the model is loading or generating
         combine_latest(caption.is_loading_model, pokemon.is_generating).pipe(
             op.map(lambda is_loading: any(is_loading)),
+            op.take_until(self.destroyed),
         ).subscribe(
             lambda is_loading: self._handle_is_loading(
                 is_loading=is_loading,

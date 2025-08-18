@@ -1,5 +1,6 @@
 from typing import override
 
+import reactivex.operators as op
 from js import document
 from pyodide.ffi import JsDomElement
 from reactivex import combine_latest
@@ -35,12 +36,9 @@ class Pokemon(Component):
     def on_render(self) -> None:
         self._pokemon_grid = document.getElementById("pokemon-grid")
 
-        combine_latest(pokemon.pokemon, pokemon.is_generating).subscribe(
-            lambda params: self._render_pokemon(
-                params[0],
-                is_generating=params[1],
-            ),
-        )
+        combine_latest(pokemon.pokemon, pokemon.is_generating).pipe(
+            op.take_until(self.destroyed),
+        ).subscribe(lambda params: self._render_pokemon(params[0], is_generating=params[1]))
 
     def _render_pokemon(self, pokemon: list[PokemonRecord], *, is_generating: bool) -> None:
         """Render the given list of Pokemon."""

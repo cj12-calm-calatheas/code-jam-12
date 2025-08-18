@@ -1,5 +1,5 @@
 from asyncio import Future
-from typing import Union
+from typing import Union, override
 
 from js import Blob, File, FileReader, console
 from pyodide.ffi.wrappers import add_event_listener
@@ -7,13 +7,17 @@ from reactivex import Observable, empty, from_future
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject, ReplaySubject, Subject
 
+from frontend.base import Service
+
 type Readable = Union[Blob, File]
 
 
-class Reader:
+class Reader(Service):
     """Service for reading files and generating object URLs."""
 
     def __init__(self) -> None:
+        super().__init__()
+
         self.is_reading = BehaviorSubject[bool](value=False)
         self.object_urls = ReplaySubject[str]()
 
@@ -27,10 +31,11 @@ class Reader:
                 ),
             ),
             op.catch(lambda err, _: self._handle_reader_error(err)),
+            op.take_until(self.destroyed),
         ).subscribe(self.object_urls)
 
-    def destroy(self) -> None:
-        """Clean up resources used by the reader."""
+    @override
+    def on_destroy(self) -> None:
         self._files.dispose()
         self.is_reading.dispose()
         self.object_urls.dispose()

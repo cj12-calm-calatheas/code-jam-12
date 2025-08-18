@@ -6,15 +6,18 @@ from reactivex import Observable, empty, from_future
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject, ReplaySubject
 
+from frontend.base import Service
 from frontend.models import PokemonDescription
 
 from .caption import caption
 
 
-class Description:
+class Description(Service):
     """Service to generate descriptions from captions."""
 
     def __init__(self) -> None:
+        super().__init__()
+
         self.is_generating_description = BehaviorSubject[bool](value=False)
         self.descriptions = ReplaySubject[PokemonDescription]()
 
@@ -29,6 +32,7 @@ class Description:
                 ),
             ),
             op.catch(lambda err, _: self._handle_description_error(err)),
+            op.take_until(self.destroyed),
         ).subscribe(self.descriptions)
 
     async def _describe(self, caption: str) -> PokemonDescription:
@@ -36,14 +40,14 @@ class Description:
         console.log("Generating description for caption:", caption)
 
         response = await pyfetch(f"/describe?prompt={caption}")
-
         response.raise_for_status()
 
         data = await response.json()
+        description = PokemonDescription.model_validate(data)
 
-        console.log("Generated description:", data)
+        console.log("Generated description:", description)
 
-        return PokemonDescription.model_validate(data)
+        return description
 
     def _handle_description_error(self, err: Exception) -> Observable:
         console.error("Failed to generate description:", err)
