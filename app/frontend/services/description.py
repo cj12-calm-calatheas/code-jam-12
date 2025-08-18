@@ -45,7 +45,7 @@ class Description(Service):
         data = await response.json()
         description = PokemonDescription.model_validate(data)
 
-        console.log("Generated description:", description)
+        console.log("Generated description:", description.model_dump_json())
 
         return description
 
