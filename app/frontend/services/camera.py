@@ -37,7 +37,6 @@ class Camera:
     def dispose_media_stream(self) -> None:
         """Stop all tracks in the media stream and notify subscribers."""
         if not (camera_stream := self.media_stream.value):
-            self._logger.warning("Camera is not active, nothing to deactivate")
             return
 
         for track in camera_stream.getTracks():
@@ -54,7 +53,6 @@ class Camera:
     def acquire_media_stream(self) -> None:
         """Trigger the process of acquiring the media stream."""
         if self.media_stream.value:
-            self._logger.warning("A media stream is already active")
             return
 
         self._acquire.on_next(None)
