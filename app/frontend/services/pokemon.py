@@ -26,6 +26,7 @@ class Pokemon(Service):
         self.pokemon = BehaviorSubject[list[PokemonRecord]](value=[])
 
         self._delete = Subject[str]()
+        self._put = Subject[PokemonRecord]()
         self._favourite = Subject[str]()
         self._refresh = Subject[None]()
 
@@ -40,10 +41,7 @@ class Pokemon(Service):
             op.take_until(self.destroyed),
         ).subscribe(self.is_generating)
 
-        # Whenever a new description is available, do the following:
-        # 1. Retrieve the corresponding image URL
-        # 2. Create a new record and add it to the list
-        # 3. Trigger a refresh
+        # Whenever a new description is available, get the corresponding image url and create an new database record
         description.descriptions.pipe(
             op.with_latest_from(reader.object_urls),
             op.map(
@@ -52,6 +50,11 @@ class Pokemon(Service):
                     img_url=params[1],
                 ),
             ),
+            op.take_until(self.destroyed),
+        ).subscribe(self._put)
+
+        # On put, update the database with the given record
+        self._put.pipe(
             op.flat_map_latest(lambda pokemon: from_future(create_task(database.put(pokemon)))),
             op.catch(lambda err, _: self._handle_update_error(err)),
             op.take_until(self.destroyed),
@@ -62,13 +65,6 @@ class Pokemon(Service):
             op.flat_map_latest(lambda name: from_future(create_task(database.delete(name)))),
             op.catch(lambda err, _: self._handle_delete_error(err)),
             op.take_until(self.destroyed),
-        ).subscribe(lambda _: self.refresh())
-
-        # When the user clicks the "favourite button", toggle the
-        # status of the pokemon in the database
-        self._favourite.pipe(
-            op.flat_map_latest(lambda name: from_future(create_task(database.favourite(name)))),
-            op.catch(lambda err, _: self._handle_favourite_error(err)),
         ).subscribe(lambda _: self.refresh())
 
         # Retrieve the current list of Pokemon from the database
@@ -94,15 +90,16 @@ class Pokemon(Service):
         self.is_refreshing.dispose()
         self.pokemon.dispose()
         self._delete.dispose()
+        self._put.dispose()
         self._refresh.dispose()
 
     def delete(self, name: str) -> None:
         """Delete the pokemon with the given name."""
         self._delete.on_next(name)
 
-    def favourite(self, name: str) -> None:
-        """Mark a pokemon with the given name as a favourite."""
-        self._favourite.on_next(name)
+    def put(self, pokemon: PokemonRecord) -> None:
+        """Update the database with the given pokemon."""
+        self._put.on_next(pokemon)
 
     def refresh(self) -> None:
         """Trigger a refresh of the list."""

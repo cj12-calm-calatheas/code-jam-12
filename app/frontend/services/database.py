@@ -1,5 +1,4 @@
 import asyncio
-import json
 from typing import TYPE_CHECKING, override
 
 from js import JSON, Event, console, indexedDB
@@ -68,41 +67,6 @@ class Database(Service):
         add_event_listener(query, "complete", on_complete)
         add_event_listener(query, "error", on_error)
         add_event_listener(query, "success", on_success)
-
-        return await future
-
-    async def favourite(self, name: str) -> None:
-        """Favourite a pokemon."""
-        await _READY.wait()
-
-        if not self._db:
-            raise DatabaseNotInitializedError
-
-        future = asyncio.Future[None]()
-
-        transaction = self._db.transaction(_COLLECTION_NAME, "readwrite")
-        store = transaction.objectStore(_COLLECTION_NAME)
-
-        get_query = store.get(name)
-
-        def on_error(_: Event) -> None:
-            future.set_result(None)
-
-        def on_put_success(_: Event) -> None:
-            future.set_result(None)
-
-        def on_get_success(event: Event) -> None:
-            result = json.loads(JSON.stringify(event.target.result))  # type: ignore[result is available]
-            status = result.get("favourite", False)
-            result["favourite"] = not status
-
-            put_query = store.put(JSON.parse(json.dumps(result)))
-
-            add_event_listener(put_query, "error", on_error)
-            add_event_listener(put_query, "success", on_put_success)
-
-        add_event_listener(get_query, "error", on_error)
-        add_event_listener(get_query, "success", on_get_success)
 
         return await future
 

@@ -161,7 +161,11 @@ class Description(Component):
         if not self._description:
             return
 
-        self._description_dropdown = DescriptionDropdown(document.getElementById(f"dropdown-{self.guid}"), self)
+        self._description_dropdown = DescriptionDropdown(
+            document.getElementById(f"dropdown-{self.guid}"),
+            self._description,
+        )
+
         self._description_dropdown.render()
 
     @override
