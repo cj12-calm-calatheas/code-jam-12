@@ -52,7 +52,7 @@ class Pokemon(Component):
 
         self._current_pokemon = []
 
-        if not pokemon:
+        if not (pokemon or is_generating):
             self._pokemon_grid.innerHTML = EMPTY_PLACEHOLDER_TEMPLATE  # type: ignore[innerHTML is available]
             return
 
