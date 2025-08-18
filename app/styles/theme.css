@@ -52,6 +52,28 @@ body {
     overflow-y: auto;
 }
 
+.modal {
+    animation: fadeIn 0.2s;
+}
+
+.notification {
+    animation: fadeIn 0.2s;
+}
+
+.pokemon-description {
+    animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .tag.type-bug {
     background-color: var(--type-bug);
     color: hsl(0, 0%, 100%);

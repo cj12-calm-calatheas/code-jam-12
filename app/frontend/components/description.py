@@ -9,7 +9,7 @@ from frontend.models import PokemonRecord
 from frontend.services import pokemon
 
 LOADING_TEMPLATE = """
-<div class="box is-flex is-flex-direction-column" style="height: 100%">
+<div class="pokemon-description box is-flex is-flex-direction-column" style="height: 100%">
     <article class="media">
         <figure class="media-left">
             <p class="image is-128x128 is-skeleton"></p>
@@ -62,7 +62,7 @@ TYPE_TEMPLATE = """
 """
 
 TEMPLATE = """
-<div class="box is-flex is-flex-direction-column" style="height: 100%;">
+<div class="pokemon-description box is-flex is-flex-direction-column" style="height: 100%;">
     <article class="media">
         <figure class="media-left">
             <p class="image is-128x128" style="overflow: hidden">
