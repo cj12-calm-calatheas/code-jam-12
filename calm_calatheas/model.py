@@ -117,6 +117,8 @@ Answer using the following schema: {json.dumps(PokemonDescription.model_json_sch
 @lru_cache
 def generate_description(user_prompt: str) -> PokemonDescription:
     """Generate a Pokemon description based on the user's prompt."""
+    LOGGER.debug('Generating a description based on user prompt: "%s"', user_prompt)
+
     messages = [
         {
             "role": "system",
@@ -142,6 +144,9 @@ def generate_description(user_prompt: str) -> PokemonDescription:
 
 def _repair(content: str, validation_error: ValidationError) -> PokemonDescription:
     """Attempt to repair the given content based on the given validation error."""
+    LOGGER.debug("Repairing content based on validation error: %s", validation_error)
+    LOGGER.debug("Original content: %s", content)
+
     messages = [
         {
             "role": "system",
