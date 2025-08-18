@@ -114,7 +114,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "accelerate", specifier = "~=1.10" },
-    { name = "kernels", specifier = ">=0.9.0" },
+    { name = "kernels", specifier = "~=0.9" },
     { name = "pydantic", specifier = "~=2.11" },
     { name = "pydantic-settings", specifier = "~=2.10" },
     { name = "starlette", specifier = "~=0.47" },
@@ -134,7 +134,7 @@ dev = [
     { name = "pre-commit", specifier = "~=4.2" },
     { name = "pyodide-py", specifier = "~=0.28" },
     { name = "pyright", specifier = "==1.1.403" },
-    { name = "pyscript", specifier = ">=0.3.3" },
+    { name = "pyscript", specifier = "~=0.3" },
     { name = "pytest", specifier = "~=8.4" },
     { name = "pytest-asyncio", specifier = "~=1.0" },
     { name = "pytest-playwright", specifier = "~=0.7" },

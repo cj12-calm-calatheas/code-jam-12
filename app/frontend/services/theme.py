@@ -1,7 +1,10 @@
-from typing import Literal, cast
+from typing import Literal, cast, override
 
+import reactivex.operators as op
 from js import document, localStorage
 from reactivex.subject import BehaviorSubject
+
+from frontend.base import Service
 
 type Theme_ = Literal["light", "dark"] | None
 
@@ -27,20 +30,30 @@ def _update_local_storage(theme: Theme_) -> None:
         localStorage.removeItem(LOCAL_STORAGE_KEY)
 
 
-class Theme:
+class Theme(Service):
     """Service to manage the theme of the application."""
 
     def __init__(self) -> None:
+        super().__init__()
+
         self.current = BehaviorSubject[Theme_](
             cast("Theme_", theme)
             if (theme := localStorage.getItem(LOCAL_STORAGE_KEY)) and theme in {"light", "dark"}
             else None,
         )
 
-        self.current.subscribe(_update_document_theme)
-        self.current.subscribe(_update_local_storage)
+        # Update the document theme whenever the current theme changes
+        self.current.pipe(
+            op.take_until(self.destroyed),
+        ).subscribe(_update_document_theme)
 
-    def destroy(self) -> None:
+        # Update the local storage whenever the current theme changes
+        self.current.pipe(
+            op.take_until(self.destroyed),
+        ).subscribe(_update_local_storage)
+
+    @override
+    def on_destroy(self) -> None:
         """Clean up the theme service."""
         self.current.dispose()
 

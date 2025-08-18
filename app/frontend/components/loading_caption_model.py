@@ -1,6 +1,6 @@
 from typing import override
 
-import reactivex.operators as ops
+import reactivex.operators as op
 from pyodide.ffi import JsDomElement
 
 from frontend.base import Component
@@ -19,8 +19,11 @@ class LoadingCaptionModel(Component):
 
     def __init__(self, root: JsDomElement) -> None:
         super().__init__(root)
-        self._subscription_is_loading = caption.is_loading_model.pipe(
-            ops.distinct_until_changed(),
+
+        # Update the UI whenever the loading state changes
+        caption.is_loading_model.pipe(
+            op.distinct_until_changed(),
+            op.take_until(self.destroyed),
         ).subscribe(
             lambda is_loading: self._handle_is_loading_update(is_loading=is_loading),
         )
@@ -29,12 +32,8 @@ class LoadingCaptionModel(Component):
     def build(self) -> str:
         return TEMPLATE
 
-    @override
-    def on_destroy(self) -> None:
-        self._subscription_is_loading.dispose()
-
     def _handle_is_loading_update(self, *, is_loading: bool) -> None:
-        """Handle updates to the loading state."""
+        """Show the notification while the model is loading."""
         if is_loading:
             self.render()
         else:

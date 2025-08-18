@@ -1,28 +1,27 @@
-import logging
 from asyncio import create_task
 
+from js import console
 from pyodide.http import pyfetch
 from reactivex import Observable, empty, from_future
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject, ReplaySubject
 
+from frontend.base import Service
 from frontend.models import PokemonDescription
 
 from .caption import caption
 
 
-class Description:
+class Description(Service):
     """Service to generate descriptions from captions."""
 
-    descriptions = ReplaySubject[PokemonDescription]()
-
-    is_generating_description = BehaviorSubject[bool](value=False)
-    is_loading_model = BehaviorSubject[bool](value=False)
-
-    _logger = logging.getLogger(__name__)
-
     def __init__(self) -> None:
-        # Generate descriptions when an image is available and the model is loaded, and notify subscribers when done
+        super().__init__()
+
+        self.is_generating_description = BehaviorSubject[bool](value=False)
+        self.descriptions = ReplaySubject[PokemonDescription]()
+
+        # Generate descriptions whenever a new caption is available
         caption.captions.pipe(
             op.do_action(lambda _: self.is_generating_description.on_next(value=True)),
             op.flat_map_latest(
@@ -33,24 +32,26 @@ class Description:
                 ),
             ),
             op.catch(lambda err, _: self._handle_description_error(err)),
+            op.take_until(self.destroyed),
         ).subscribe(self.descriptions)
 
     async def _describe(self, caption: str) -> PokemonDescription:
         """Generate a description from the given caption."""
-        self._logger.debug("Generating description for caption: %s", caption)
+        console.log("Generating description for caption:", caption)
 
         response = await pyfetch(f"/describe?prompt={caption}")
-
         response.raise_for_status()
 
         data = await response.json()
+        description = PokemonDescription.model_validate(data)
 
-        self._logger.debug("Generated description: %s", data)
+        console.log("Generated description:", description.model_dump_json())
 
-        return PokemonDescription.model_validate(data)
+        return description
 
     def _handle_description_error(self, err: Exception) -> Observable:
-        self._logger.error("Failed to generate description", exc_info=err)
+        """Handle errors that occur while generating descriptions."""
+        console.error("Failed to generate description:", err)
         return empty()
 
 

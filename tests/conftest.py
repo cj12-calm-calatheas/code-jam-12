@@ -5,9 +5,9 @@ import pytest
 from playwright.sync_api import Page, expect
 from testcontainers.compose import DockerCompose
 
-CAPTION_GENERATED_TIMEOUT_MS = 40000
+DESCRIPTION_GENERATED_TIMEOUT_MS = 600000
 CAPTION_MODEL_LOADED_TIMEOUT_MS = 30000
-PYSCRIPT_READY_TIMEOUT_MS = 20000
+PYSCRIPT_READY_TIMEOUT_MS = 30000
 
 
 @pytest.fixture(scope="session")

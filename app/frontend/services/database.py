@@ -1,11 +1,15 @@
 import asyncio
 import json
-import logging
+from typing import TYPE_CHECKING, override
 
-from js import JSON, Event, indexedDB
+from js import JSON, Event, console, indexedDB
 from pyodide.ffi.wrappers import add_event_listener
 
+from frontend.base import Service
 from frontend.models import PokemonRecord
+
+if TYPE_CHECKING:
+    from js import IDBDatabase
 
 _COLLECTION_NAME = "pokemon"
 _DB_NAME = "calm_calatheas"
@@ -13,19 +17,37 @@ _DB_VERSION = 1
 _READY = asyncio.Event()
 
 
-class Database:
-    """Service for interacting with IndexedDB."""
-
-    _logger = logging.getLogger(__name__)
+class DatabaseNotInitializedError(Exception):
+    """Error raised when the database is not initialized."""
 
     def __init__(self) -> None:
+        super().__init__("Database is not initialized.")
+
+
+class Database(Service):
+    """Service for interacting with IndexedDB."""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        self._db: IDBDatabase | None = None
+
         open_ = indexedDB.open(_DB_NAME, _DB_VERSION)
+
         add_event_listener(open_, "success", self._handle_open_success)
         add_event_listener(open_, "upgradeneeded", self._handle_open_upgrade_needed)
+
+    @override
+    def on_destroy(self) -> None:
+        if self._db:
+            self._db.close()
 
     async def delete(self, name: str) -> None:
         """Delete a Pokemon."""
         await _READY.wait()
+
+        if not self._db:
+            raise DatabaseNotInitializedError
 
         future = asyncio.Future[None]()
 
@@ -52,6 +74,9 @@ class Database:
     async def favourite(self, name: str) -> None:
         """Favourite a pokemon."""
         await _READY.wait()
+
+        if not self._db:
+            raise DatabaseNotInitializedError
 
         future = asyncio.Future[None]()
 
@@ -85,6 +110,9 @@ class Database:
         """Find all Pokemon."""
         await _READY.wait()
 
+        if not self._db:
+            raise DatabaseNotInitializedError
+
         future = asyncio.Future[list[PokemonRecord]]()
 
         transaction = self._db.transaction(_COLLECTION_NAME, "readonly")
@@ -113,8 +141,11 @@ class Database:
         return await future
 
     async def find_one(self, name: str) -> PokemonRecord | None:
-        """Find a Pokemon by name."""
+        """Find a single Pokemon."""
         await _READY.wait()
+
+        if not self._db:
+            raise DatabaseNotInitializedError
 
         future = asyncio.Future[PokemonRecord | None]()
 
@@ -144,6 +175,9 @@ class Database:
         """Store a Pokemon."""
         await _READY.wait()
 
+        if not self._db:
+            raise DatabaseNotInitializedError
+
         future = asyncio.Future[None]()
 
         transaction = self._db.transaction(_COLLECTION_NAME, "readwrite")
@@ -168,16 +202,26 @@ class Database:
         return await future
 
     def _handle_open_success(self, event: Event) -> None:
+        """Handle the successful opening of the database."""
         self._db = event.target.result  # type: ignore[result is available]
-        self._logger.info("Opened IndexedDB.")
+        console.log("Opened IndexedDB.")
 
         _READY.set()
 
     def _handle_open_upgrade_needed(self, event: Event) -> None:
+        """Handle the upgrade needed event."""
         self._db = event.target.result  # type: ignore[result is available]
-        self._db.createObjectStore(_COLLECTION_NAME, {"keyPath": "name"})
-        self._logger.info("Initialized IndexedDB.")
 
+        if not self._db:
+            raise DatabaseNotInitializedError
+
+        self._db.createObjectStore(_COLLECTION_NAME, {"keyPath": "name"})
+
+        add_event_listener(event.target.transaction, "complete", self._handle_upgrade_transaction_complete)  # type: ignore[transaction is available]
+
+    def _handle_upgrade_transaction_complete(self, _: Event) -> None:
+        """Handle the completion of the upgrade transaction."""
+        console.log("Initialized IndexedDB.")
         _READY.set()
 
 

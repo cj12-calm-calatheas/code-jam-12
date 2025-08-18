@@ -74,4 +74,5 @@ class Header(Component):
             self._navbar_burger.classList.remove("is-active")
 
     def _toggle_navbar(self, _: Event) -> None:
+        """Toggle the navbar menu."""
         self.expanded = not self.expanded

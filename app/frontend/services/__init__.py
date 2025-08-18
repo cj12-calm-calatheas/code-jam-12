@@ -1,4 +1,4 @@
-from .camera import Camera, camera
+from .camera import Camera
 from .caption import Caption, caption
 from .database import Database, database
 from .description import Description, description
@@ -15,7 +15,6 @@ __all__ = [
     "Reader",
     "Theme",
     "Theme_",
-    "camera",
     "caption",
     "database",
     "description",
