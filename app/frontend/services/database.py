@@ -80,7 +80,7 @@ class Database:
         return await future
 
     async def find_one(self, name: str) -> PokemonRecord | None:
-        """Find a Pokemon by name."""
+        """Find a single Pokemon."""
         await _READY.wait()
 
         future = asyncio.Future[PokemonRecord | None]()
