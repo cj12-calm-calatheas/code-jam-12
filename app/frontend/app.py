@@ -83,13 +83,18 @@ class App(Component):
             ),
         )
 
-    def _on_pokemon_refresh(self, _: Event) -> None:
+    def _on_pokemon_refresh(self, event: Event) -> None:
         """Handle the Pokemon refresh button click event."""
+        if event.currentTarget.hasAttribute("disabled"):  # type: ignore[currentTarget is available]
+            return
+
         pokemon.refresh()
 
     def _handle_pokemon_is_refreshing(self, *, is_refreshing: bool) -> None:
         """Handle the Pokemon refresh state."""
         if is_refreshing:
+            self._pokemon_refresh.setAttribute("disabled", "")
             self._pokemon_refresh_icon.classList.add("fa-spin")
         else:
+            self._pokemon_refresh.removeAttribute("disabled")
             self._pokemon_refresh_icon.classList.remove("fa-spin")
