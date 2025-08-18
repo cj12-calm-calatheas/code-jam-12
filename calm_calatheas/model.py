@@ -176,6 +176,7 @@ def _prompt(messages: list[dict[str, str]]) -> tuple[str, str]:
 
     model_inputs = TOKENIZER([text], return_tensors="pt").to(MODEL.device)
 
+    # The magic numbers below taken from the model documentation, see https://huggingface.co/Qwen/Qwen3-1.7B#quickstart
     generated_ids = MODEL.generate(**model_inputs, max_new_tokens=32768)
     output_ids = generated_ids[0][len(model_inputs.input_ids[0]) :].tolist()
 
