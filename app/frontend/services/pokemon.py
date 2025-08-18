@@ -61,7 +61,6 @@ class Pokemon(Service):
             op.take_until(self.destroyed),
         ).subscribe(lambda _: self.refresh())
 
-        # Retrieve the current list of Pokemon from the database
         # On refresh, retrieve the current list of Pokemon from the database. Sort the list by timestamp
         self._refresh.pipe(
             op.do_action(lambda _: self.is_refreshing.on_next(value=True)),
