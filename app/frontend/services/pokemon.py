@@ -1,12 +1,13 @@
 import logging
 from asyncio import create_task
 
-from reactivex import Observable, empty, from_future
+from reactivex import Observable, combine_latest, empty, from_future
 from reactivex import operators as op
 from reactivex.subject import BehaviorSubject, Subject
 
 from frontend.models import PokemonRecord
 
+from .caption import caption
 from .database import database
 from .description import description
 from .reader import reader
@@ -15,6 +16,7 @@ from .reader import reader
 class Pokemon:
     """Service that maintains a list of the user's current Pokemon."""
 
+    is_generating = BehaviorSubject[bool](value=False)
     is_refreshing = BehaviorSubject[bool](value=False)
     pokemon = BehaviorSubject[list[PokemonRecord]](value=[])
 
@@ -24,13 +26,28 @@ class Pokemon:
     _refresh = Subject[None]()
 
     def __init__(self) -> None:
+        # Combine the loading states from all relevant sources
+        combine_latest(
+            caption.is_generating_caption,
+            description.is_generating_description,
+            reader.is_reading,
+        ).pipe(
+            op.map(lambda is_loading: any(is_loading)),
+            op.distinct_until_changed(),
+        ).subscribe(self.is_generating)
+
         # When a new description is available, do the following:
         # 1. Retrieve the corresponding image URL
         # 2. Create a new record and add it to the list
         # 3. Trigger a refresh
         description.descriptions.pipe(
             op.with_latest_from(reader.object_urls),
-            op.map(lambda params: PokemonRecord(**params[0].model_dump(), img_url=params[1])),
+            op.map(
+                lambda params: PokemonRecord(
+                    **params[0].model_dump(),
+                    img_url=params[1],
+                ),
+            ),
             op.flat_map_latest(lambda pokemon: from_future(create_task(database.put(pokemon)))),
             op.catch(lambda err, _: self._handle_update_error(err)),
         ).subscribe(lambda _: self.refresh())
@@ -41,7 +58,7 @@ class Pokemon:
             op.catch(lambda err, _: self._handle_delete_error(err)),
         ).subscribe(lambda _: self.refresh())
 
-        # Retrieve the current list of Pokemon from the database
+        # Retrieve the current list of Pokemon from the database. Sort the list by timestamp.
         self._refresh.pipe(
             op.do_action(lambda _: self.is_refreshing.on_next(value=True)),
             op.flat_map_latest(
@@ -50,6 +67,13 @@ class Pokemon:
                 ),
             ),
             op.catch(lambda err, _: self._handle_refresh_error(err)),
+            op.map(
+                lambda pokemon: sorted(
+                    pokemon,
+                    key=lambda p: p.timestamp,
+                    reverse=True,
+                ),
+            ),
         ).subscribe(self.pokemon)
 
         # Trigger a refresh on startup

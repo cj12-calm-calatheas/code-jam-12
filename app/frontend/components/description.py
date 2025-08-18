@@ -8,10 +8,6 @@ from frontend.base import Component
 from frontend.models import PokemonRecord
 from frontend.services import pokemon
 
-TYPE_TEMPLATE = """
-<span class="tag type-{type_class}">{type_name}</span>
-"""
-
 LOADING_TEMPLATE = """
 <div class="box is-flex is-flex-direction-column" style="height: 100%">
     <article class="media">
@@ -61,6 +57,9 @@ LOADING_TEMPLATE = """
 </div>
 """
 
+TYPE_TEMPLATE = """
+<span class="tag type-{type_class}">{type_name}</span>
+"""
 
 TEMPLATE = """
 <div class="box is-flex is-flex-direction-column" style="height: 100%;">
