@@ -19,8 +19,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "bitsandbytes>=0.47.0",
+    "bitsandbytes~=0.47",
     "mkdocs~=1.6",
+    "mkdocs-drawio~=1.11",
     "mkdocs-material~=9.6",
     "mkdocstrings~=0.29",
     "mkdocstrings-python~=1.16",
