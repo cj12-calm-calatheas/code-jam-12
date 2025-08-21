@@ -72,10 +72,15 @@ nav:
     - Contributor Guide:
           - contributor-guide/index.md
           - Development Environment: contributor-guide/development-environment.md
+          - How to Run: contributor-guide/how-to-run.md
           - Version Control: contributor-guide/version-control.md
           - Documentation: contributor-guide/documentation.md
     - Design:
           - design/index.md
+          - Design Goals: design/design-goals.md
+          - System Overview: design/system-overview.md
+          - Web App: design/web-app.md
+          - Backend: design/backend.md
 
 plugins:
     - autorefs

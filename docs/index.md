@@ -42,12 +42,13 @@ Open Pokedexter on your phone and start discovering Pokémon all around you!
 The theme for this year's code jam is to write a **browser-based** Python application that is **the wrong tool for the job**.
 
 Pokedexter is intentionally an intentionally out of place tool for Pokémon identification. It neither identifies real-world
-objects nor actual Pokémon. Instead, it invites users to view their everyday life through a playful, imaginative Pokémon
-perspective.
+objects nor actual Pokémon. Instead, it invites users to view their everyday surroundings through a playful, imaginative
+Pokémon perspective.
 
-Most modern web apps are built with JavaScript frameworks like React or Angular. With Pokedexter, we set out to discover
-what’s possible using only Python in the browser. Our aim was to push the boundaries of browser-based Python, especially
-in areas where Python excels—AI and machine learning.
+Most modern web apps are built with JavaScript frameworks like React or Angular. With Pokedexter, we set out to see how
+closely we could replicate a typical web app experience using Python instead of JavaScript. Our goal was to apply common
+web development architecture and design patterns, while also taking advantage of Python’s strengths in data processing
+and machine learning.
 
 ## About the team
 
