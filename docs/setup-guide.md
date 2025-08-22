@@ -99,10 +99,10 @@ up HTTPS for the app.
 **If you are hosting Pokedexter yourself**, here's a sample `docker-compose.yaml` file using [Caddy](https://caddyserver.com/):
 
 ```yaml
-name: Pokedexter
+name: pokedexter
 
 services:
-    caddy:
+    reverse-proxy:
         image: caddy:latest
         command: caddy reverse-proxy --from <your-domain>:8000 --to app:8000
         depends_on:
