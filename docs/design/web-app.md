@@ -118,8 +118,7 @@ stronger choice for web development and help it move beyond experimental or hobb
 There is a noticeable slowdown during model initialization and occasionally when processing images. To address this, we
 tried running the model in a separate [web worker](https://docs.pyscript.net/2025.8.1/user-guide/workers/) to offload
 processing from the main thread. However, we encountered errors loading the model in the worker and were unable to resolve
-them within our timeframe. With more time, we believe this issue could be solved, but we chose to focus on other features
-for this release.
+them within our timeframe. With more time, we believe this issue could be solved, but we chose to focus on other features.
 
 ## Database
 
