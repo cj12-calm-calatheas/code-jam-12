@@ -115,6 +115,12 @@ While we would have preferred to leverage Python’s rich machine learning ecosy
 prevent us from doing so. Enabling advanced machine learning capabilities directly in the browser would make Python a much
 stronger choice for web development and help it move beyond experimental or hobby projects.
 
+There is a noticeable slowdown during model initialization and occasionally when processing images. To address this, we
+tried running the model in a separate [web worker](https://docs.pyscript.net/2025.8.1/user-guide/workers/) to offload
+processing from the main thread. However, we encountered errors loading the model in the worker and were unable to resolve
+them within our timeframe. With more time, we believe this issue could be solved, but we chose to focus on other features
+for this release.
+
 ## Database
 
 The database is responsible for storing each user's Pokémon collection.
