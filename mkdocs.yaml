@@ -1,11 +1,13 @@
 copyright: © 2025 Calm Calatheas 🪴
-repo_name: code-jam-12
+repo_name: cj12-calm-calatheas/code-jam-12
 repo_url: https://github.com/cj12-calm-calatheas/code-jam-12
-site_name: Calm Calatheas 🪴
+site_name: Pokedexter
 site_url: https://cj12-calm-calatheas.github.io/code-jam-12/
 dev_addr: 127.0.0.1:9000
 
 theme:
+    favicon: assets/logo-16x16.png
+    logo: assets/logo-128x128.png
     name: material
     search: true
 
@@ -24,18 +26,17 @@ theme:
 
     palette:
         - media: "(prefers-color-scheme)"
-          accent: deep purple
           toggle:
               icon: material/brightness-auto
               name: Switch to light mode
         - media: "(prefers-color-scheme: light)"
-          accent: deep purple
+          primary: white
           scheme: default
           toggle:
               icon: material/brightness-7
               name: Switch to dark mode
         - media: "(prefers-color-scheme: dark)"
-          accent: deep purple
+          primary: black
           scheme: slate
           toggle:
               icon: material/brightness-4
@@ -66,18 +67,27 @@ markdown_extensions:
           permalink: true
 
 nav:
-    - User Guide:
-          - user-guide/index.md
+    - User Guide: user-guide.md
+    - Setup Guide: setup-guide.md
     - Contributor Guide:
           - contributor-guide/index.md
           - Development Environment: contributor-guide/development-environment.md
           - Version Control: contributor-guide/version-control.md
           - Documentation: contributor-guide/documentation.md
-    - Architecture:
-          - architecture/index.md
+    - Design:
+          - design/index.md
+          - Design Goals: design/design-goals.md
+          - System Overview: design/system-overview.md
+          - Web App: design/web-app.md
+          - Backend: design/backend.md
+    - Code:
+          - code/index.md
+          - Frontend: code/frontend.md
+          - Backend: code/backend.md
 
 plugins:
     - autorefs
+    - drawio
     - mkdocstrings:
           handlers:
               python:

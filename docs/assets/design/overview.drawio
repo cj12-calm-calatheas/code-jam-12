@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0" version="28.1.0">
+  <diagram name="System Overview" id="7Wf_n8YGlwndWxG2_0oc">
+    <mxGraphModel dx="1173" dy="1183" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3pm-BGtW_3T6cG-14YNn-1" value="&lt;h1&gt;Pokedexter&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+          <mxGeometry x="60" y="50" width="620" height="750" as="geometry" />
+        </mxCell>
+        <mxCell id="gFeH3PevOCIE2Tb5RybW-1" value="&lt;h2&gt;Browser&lt;/h2&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="80" y="120" width="570" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="3pm-BGtW_3T6cG-14YNn-2" value="&lt;h2&gt;Web App&lt;/h2&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" parent="1" vertex="1">
+          <mxGeometry x="120" y="190" width="490" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="3pm-BGtW_3T6cG-14YNn-3" value="&lt;h3&gt;Presentation Layer&lt;/h3&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" parent="1" vertex="1">
+          <mxGeometry x="155" y="260" width="415" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3pm-BGtW_3T6cG-14YNn-4" value="&lt;h3&gt;Camera&lt;/h3&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" parent="1" vertex="1">
+          <mxGeometry x="155" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3pm-BGtW_3T6cG-14YNn-5" value="&lt;h3&gt;Object Recognition&lt;/h3&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" parent="1" vertex="1">
+          <mxGeometry x="305" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3pm-BGtW_3T6cG-14YNn-8" value="&lt;h2&gt;Backend&lt;/h2&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
+          <mxGeometry x="80" y="500" width="570" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="3pm-BGtW_3T6cG-14YNn-9" value="&lt;h3&gt;Reverse Proxy&lt;/h3&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="1" vertex="1">
+          <mxGeometry x="155" y="585" width="415" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3pm-BGtW_3T6cG-14YNn-10" value="&lt;h3&gt;Description Generation&lt;/h3&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="1" vertex="1">
+          <mxGeometry x="380" y="670" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gFeH3PevOCIE2Tb5RybW-4" value="&lt;h3&gt;Web Server&lt;/h3&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="1" vertex="1">
+          <mxGeometry x="155" y="670" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gFeH3PevOCIE2Tb5RybW-6" value="&lt;h3&gt;Database&lt;/h3&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" parent="1" vertex="1">
+          <mxGeometry x="450" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
