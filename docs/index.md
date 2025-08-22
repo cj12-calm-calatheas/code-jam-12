@@ -54,8 +54,10 @@ and machine learning.
 This project has been built by the Calm Calatheas team for the [Python Discord Code Jam 2025](https://pythondiscord.com/events/code-jams/12/).
 Please feel free to reach out if you have any questions, or need a hand with anything!
 
-[<img src="https://github.com/thijsfranck.png" alt="TFBlunt" title="TFBlunt" width="64">](https://github.com/thijsfranck)
-[<img src="https://avatars.githubusercontent.com/u/133528118?s=96&v=4" alt="leoluy" title="leoluy" width="64">](https://github.com/leolhuile)
-[<img src="https://github.com/Zike01.png" alt="zike01" title="zike01" width="64">](https://github.com/Zike01)
-[<img src="https://github.com/FloncDev.png" alt="Flonc" title="Flonc" width="64">](https://github.com/FloncDev)
-[<img src="https://github.com/esmaycat.png" alt="esmaycat" title="esmaycat" width="64">](https://github.com/esmaycat)
+|                                                                                                                                               | Name                                      | Contributions                                                      |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
+| [<img src="https://github.com/thijsfranck.png" alt="TFBlunt" title="TFBlunt" width="64">](https://github.com/thijsfranck)                     | [TFBlunt](https://github.com/thijsfranck) | Team Lead, Frontend, Description Generation, Docs                  |
+| [<img src="https://avatars.githubusercontent.com/u/133528118?s=96&v=4" alt="leoluy" title="leoluy" width="64">](https://github.com/leolhuile) | [leoluy](https://github.com/leolhuile)    | Description Generation, Model Selection, Frontend Mockup, Ideation |
+| [<img src="https://github.com/Zike01.png" alt="zike01" title="zike01" width="64">](https://github.com/Zike01)                                 | [Zike01](https://github.com/Zike01)       | Ideation                                                           |
+| [<img src="https://github.com/FloncDev.png" alt="Flonc" title="Flonc" width="64">](https://github.com/FloncDev)                               | [Flonc](https://github.com/FloncDev)      | Initial Frontend Prototype                                         |
+| [<img src="https://github.com/esmaycat.png" alt="esmaycat" title="esmaycat" width="64">](https://github.com/esmaycat)                         | [esmaycat](https://github.com/esmaycat)   | Object Detection, Transformers.js integration, Favourites Feature  |
