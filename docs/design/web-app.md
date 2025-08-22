@@ -43,6 +43,12 @@ event listeners and cleaning up internal state.
 Lifecycle hooks enable components to run custom logic before and after each phase of their lifecycle. These hooks provide
 flexibility for setup, teardown, and responding to changes during initialization, rendering, and destruction.
 
+Components define their HTML structure using text-based templates, which are processed by a simple, custom-built templating
+engine. This engine is intentionally minimal and does not support advanced features such as conditionals or loops, unlike
+the templating systems in frameworks like React or Angular. Looking ahead, the upcoming [template strings](https://peps.python.org/pep-0750)
+feature in Python 3.14 is expected to improve Python’s native HTML templating capabilities, as supporting this use case
+is specifically mentioned in the PEP.
+
 ### Services
 
 Services are responsible for providing business logic and state management for the application. They encapsulate the core
