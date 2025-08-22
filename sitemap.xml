@@ -2,30 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://cj12-calm-calatheas.github.io/code-jam-12/</loc>
-         <lastmod>2025-08-18</lastmod>
+         <lastmod>2025-08-22</lastmod>
     </url>
     <url>
-         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/architecture/</loc>
-         <lastmod>2025-08-18</lastmod>
-    </url>
-    <url>
-         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/contributor-guide/</loc>
-         <lastmod>2025-08-18</lastmod>
-    </url>
-    <url>
-         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/contributor-guide/development-environment/</loc>
-         <lastmod>2025-08-18</lastmod>
-    </url>
-    <url>
-         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/contributor-guide/documentation/</loc>
-         <lastmod>2025-08-18</lastmod>
-    </url>
-    <url>
-         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/contributor-guide/version-control/</loc>
-         <lastmod>2025-08-18</lastmod>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/setup-guide/</loc>
+         <lastmod>2025-08-22</lastmod>
     </url>
     <url>
          <loc>https://cj12-calm-calatheas.github.io/code-jam-12/user-guide/</loc>
-         <lastmod>2025-08-18</lastmod>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/code/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/code/backend/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/code/frontend/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/contributor-guide/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/contributor-guide/development-environment/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/contributor-guide/documentation/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/contributor-guide/version-control/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/design/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/design/backend/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/design/design-goals/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/design/system-overview/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://cj12-calm-calatheas.github.io/code-jam-12/design/web-app/</loc>
+         <lastmod>2025-08-22</lastmod>
     </url>
 </urlset>
