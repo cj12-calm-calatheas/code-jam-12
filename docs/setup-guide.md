@@ -22,6 +22,30 @@ the app yourself on the device where you are running the server.
 Keep reading if you'd like to deploy Pokedexter for production use, or if you'd like to access the app from another device
 like a mobile phone or tablet.
 
+## Local HTTPS for Mobile Testing
+
+You may just want to test the application on a mobile device without setting up a full reverse proxy. Here's how to create a simple, self-signed HTTPS server for local testing.
+
+First, you'll need to create your own SSL/TLS certificate. This certificate will be used to encrypt the connection between your computer and the mobile device. To generate it, run the following command in the project's root directory:
+
+```bash
+openssl req -x509 -keyout key.pem -out cert.pem -nodes
+```
+
+The command will prompt you for some information. When asked for the "Common Name", enter your computer's local IP address. For all other prompts, press Enter to accept the default values. This process will generate two files in your project's root directory: `key.pem` (your private key) and `cert.pem` (your self-signed certificate).
+
+You can now start the server with the following command:
+
+```bash
+uv run uvicorn calm_calatheas.app:app \
+  --host "0.0.0.0" \
+  --port 4443 \
+  --ssl-keyfile key.pem \
+  --ssl-certfile cert.pem
+```
+
+Because the certificate is self-signed (i.e. not issued by a trusted authority), your browser will likely display a "certificate not trusted" warning. This is expected. You can safely bypass this warning to continue to your application.
+
 ## Build the Docker image
 
 The easiest way to deploy Pokedexter is to use [Docker](https://www.docker.com/). To deploy Pokedexter, you must first
