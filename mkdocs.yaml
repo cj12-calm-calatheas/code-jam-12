@@ -67,12 +67,11 @@ markdown_extensions:
           permalink: true
 
 nav:
-    - User Guide:
-          - user-guide/index.md
+    - User Guide: user-guide.md
+    - Setup Guide: setup-guide.md
     - Contributor Guide:
           - contributor-guide/index.md
           - Development Environment: contributor-guide/development-environment.md
-          - How to Run: contributor-guide/how-to-run.md
           - Version Control: contributor-guide/version-control.md
           - Documentation: contributor-guide/documentation.md
     - Design:
@@ -81,6 +80,10 @@ nav:
           - System Overview: design/system-overview.md
           - Web App: design/web-app.md
           - Backend: design/backend.md
+    - Code:
+          - code/index.md
+          - Frontend: code/frontend.md
+          - Backend: code/backend.md
 
 plugins:
     - autorefs

@@ -16,7 +16,8 @@ similar to modern web frameworks like React or Angular, aligning with our key de
 ### Components
 
 Views are organized as individual components, each responsible for a specific part of the user interface. They are all grouped
-in the `components` module and inherit from a base `Component` class that implements rendering logic and lifecycle methods.
+in the [`components`][app.frontend.components] module and inherit from a base [`Component`][app.frontend.base.component.Component]
+class that implements rendering logic and lifecycle methods.
 
 The lifecycle of a component includes _initialization_, _rendering_, and _destruction_. This lifecycle is typically managed
 by a parent component that coordinates these phases.
@@ -48,8 +49,8 @@ Services are responsible for providing business logic and state management for t
 functionality and can be reused across different components. Most services exist globally and can be accessed by any component
 that needs them, although they can also be owned by specific components if needed.
 
-All services are organized into the `services` module and inherit from the `Service` base class, which provides lifecycle
-management for all services.
+All services are organized into the [`services`][app.frontend.services] module and inherit from the [`Service`][app.frontend.base.service.Service]
+base class, which provides lifecycle management for all services.
 
 A service’s lifecycle consists of two main phases: _initialization_ and _destruction_. Global services are managed centrally,
 while services owned by specific components are managed by those components.

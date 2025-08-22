@@ -1,10 +1,10 @@
-# How to Run
+# Setup Guide
 
 This guide provides a step-by-step approach on how to run Pokedexter.
 
 ## Set up the development environment
 
-Follow the instructions in the [development environment setup guide](./development-environment.md) to
+Follow the instructions in the [development environment setup guide](./contributor-guide/development-environment.md) to
 set up your local environment.
 
 ## Run the app locally
@@ -39,6 +39,23 @@ uv run task build-docker
 
 This first builds a `.whl` file for the project, and then uses that file to build the Docker image based on the included
 `Dockerfile`. The docker image will be called `calm-calatheas:latest`.
+
+## Set the environment variables
+
+Pokedexter can be configured using environment variables. The following configuration options are available:
+
+| Environment Variable | Description                             | Default   |
+| -------------------- | --------------------------------------- | --------- |
+| `HOST`               | The address to bind the server to.      | `0.0.0.0` |
+| `LOG_LEVEL`          | The logging level for the application.  | `DEBUG`   |
+| `PORT`               | The port to run the server on.          | `8000`    |
+| `STATIC_FILES_PATH`  | The path to the static files directory. | `app`     |
+
+!!! NOTE "All settings are optional"
+
+    You can run the app using the default settings without specifying any environment variables.
+
+See the [`Settings`][calm_calatheas.settings.Settings] documentation for more information.
 
 ## Run the Docker container
 

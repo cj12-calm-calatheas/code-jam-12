@@ -57,7 +57,7 @@
     },
     "features": {
         "ghcr.io/devcontainers-extra/features/apt-packages": {
-            "packages": ["gnupg2"]
+            "packages": ["gnupg2", "graphviz"]
         },
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/node:1": {
